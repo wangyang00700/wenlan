@@ -23,6 +23,10 @@
     <![endif]-->
 </head>
 <style>
+    * {
+        font-family: 微软雅黑;
+    }
+
     iframe {
         width: 100%;
         height: 100%;
