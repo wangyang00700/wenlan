@@ -28,8 +28,6 @@
 
     * {
         font-family: 微软雅黑;
-        font-size: 13px;
-
     }
 
 </style>
