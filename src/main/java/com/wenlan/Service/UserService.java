@@ -85,6 +85,7 @@ public class UserService {
         for (int i = 0; i < datas.length; ) {
             User user = new User();
             user.setUid(Integer.parseInt(datas[i++]));
+            user.setDtype(Integer.parseInt(datas[i++]));
             user.setCount(Integer.parseInt(datas[i++]));
             userMapper.updateByPrimaryKeySelective(user);
         }

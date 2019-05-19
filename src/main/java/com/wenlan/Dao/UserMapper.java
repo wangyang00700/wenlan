@@ -2,12 +2,13 @@ package com.wenlan.Dao;
 
 import com.wenlan.Model.User;
 import com.wenlan.Model.UserExample;
-import org.apache.ibatis.annotations.Param;
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.stereotype.Repository;
 
 @MapperScan
 @Repository

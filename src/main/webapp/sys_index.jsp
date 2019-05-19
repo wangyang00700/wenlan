@@ -73,7 +73,8 @@
                     <a class="" href="javascript:;">资源管理</a>
                     <dl class="layui-nav-child">
                         <dd><a href="upload.jsp" target="content_iframe">上传资源</a></dd>
-                        <dd><a href="check_data.jsp" target="content_iframe">查看资源</a></dd>
+                        <dd><a href="check_now_data.jsp" target="content_iframe">实时资源</a></dd>
+                        <dd><a href="check_tonight_data.jsp" target="content_iframe">隔夜资源</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item ">

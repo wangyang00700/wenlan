@@ -34,6 +34,26 @@
     .layui-container {
         padding: 0;
     }
+
+    /* 防止下拉框下拉值被遮盖*/
+    .layui-table-cell {
+        overflow: visible;
+    }
+
+    .layui-table-box {
+        overflow: visible;
+    }
+
+    .layui-table-body {
+        overflow: visible;
+    }
+
+    /* 调整高度 */
+    td .layui-form-select {
+        margin-top: -10px;
+        margin-left: -15px;
+        margin-right: -15px;
+    }
 </style>
 <body>
 <div class="layui-container">
@@ -42,20 +62,26 @@
         <table class="layui-hide" id="test" lay-filter="test"></table>
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm" lay-event="saveCount">保存此页提取量</button>
+                <button class="layui-btn layui-btn-sm" lay-event="saveCount">批量修改此页</button>
             </div>
         </script>
         <script type="text/html" id="barDemo">
             <a class="layui-btn layui-btn-xs" lay-event="save">保存</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
         </script>
+        <script type="text/html" id="select">
+            <select name="dtype" id="dtype" lay-filter="dtype">
+                <option value="0">实时资源</option>
+                <option value="1">隔夜资源</option>
+            </select>
+        </script>
     </fieldset>
 </div>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="layui/layui.all.js"></script>
 <script>
-    layui.use('table', function () {
-        var table = layui.table;
+    layui.use(['table', 'form'], function () {
+        var table = layui.table, form = layui.form;
 
         var tableIns = table.render({
             elem: '#test'
@@ -70,14 +96,33 @@
             , method: 'post'  //提交方式
             , cols: [[ //表头
                 {field: 'uid', title: 'ID', sort: true}
-                , {field: 'username', title: '账号', sort: true, edit: 'text'}
-                , {field: 'password', title: '密码', edit: 'text'}
+                , {field: 'username', title: '账号', sort: true}
+                , {field: 'password', title: '密码'}
+                , {field: 'dtype', title: '提取类型', templet: "#select"}
                 , {field: 'count', title: '提取量', sort: true, edit: 'number'}
                 , {fixed: 'right', title: '操作', toolbar: '#barDemo', align: 'center'}
 //                , {field: 'status', title: '状态(0禁用1启用)', sort: true, edit: 'text'}
 //                , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150, align: 'center'}
-            ]]
+            ]],
+            done: function (res, curr, count) {
+                layui.each($('td select'), function (index, item) {
+                    var elem = $(item);
+                    elem.val(res.data[index].dtype).parents('div.layui-table-cell').css('overflow', 'visible');
+                });
+                form.render();
+            }
+
         });
+
+        form.on('select(dtype)', function (data) {
+            var elem = $(data.elem);
+            var trElem = elem.parents('tr');
+            var tableData = table.cache.testTable;
+            // 更新到表格的缓存数据中，才能在获得选中行等等其他的方法中得到更新之后的值
+            tableData[trElem.data('index')][elem.attr('name')] = data.value;
+        });
+
+
         //头工具栏事件
         table.on('toolbar(test)', function (obj) {
             switch (obj.event) {
@@ -85,7 +130,7 @@
                     var data = table.cache.testTable;
                     var d = '';
                     for (var i = 0; i < data.length; i++) {
-                        d += ',' + data[i].uid + ',' + data[i].count;
+                        d += ',' + data[i].uid + ',' + data[i].dtype + ',' + data[i].count;
                     }
                     $.post('user/update', {"data": d}, function (json) {
                         if (json.code == 1) {
@@ -102,7 +147,7 @@
             var data = obj.data;
             switch (obj.event) {
                 case 'save':
-                    var d = ',' + data.uid + ',' + data.count;
+                    var d = ',' + data.uid + ',' + data.dtype + ',' + data.count;
                     $.post('user/update', {"data": d}, function (json) {
                         if (json.code == 1)
                             layer.msg("保存成功", {icon: 1});

@@ -11,6 +11,8 @@ public class User {
 
     private Integer count;
 
+    private Integer dtype;
+
     public Integer getUid() {
         return uid;
     }
@@ -49,5 +51,13 @@ public class User {
 
     public void setCount(Integer count) {
         this.count = count;
+    }
+
+    public Integer getDtype() {
+        return dtype;
+    }
+
+    public void setDtype(Integer dtype) {
+        this.dtype = dtype;
     }
 }

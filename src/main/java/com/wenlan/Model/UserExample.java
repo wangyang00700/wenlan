@@ -423,6 +423,66 @@ public class UserExample {
             addCriterion("count not between", value1, value2, "count");
             return (Criteria) this;
         }
+
+        public Criteria andDtypeIsNull() {
+            addCriterion("dtype is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDtypeIsNotNull() {
+            addCriterion("dtype is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDtypeEqualTo(Integer value) {
+            addCriterion("dtype =", value, "dtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andDtypeNotEqualTo(Integer value) {
+            addCriterion("dtype <>", value, "dtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andDtypeGreaterThan(Integer value) {
+            addCriterion("dtype >", value, "dtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andDtypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("dtype >=", value, "dtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andDtypeLessThan(Integer value) {
+            addCriterion("dtype <", value, "dtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andDtypeLessThanOrEqualTo(Integer value) {
+            addCriterion("dtype <=", value, "dtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andDtypeIn(List<Integer> values) {
+            addCriterion("dtype in", values, "dtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andDtypeNotIn(List<Integer> values) {
+            addCriterion("dtype not in", values, "dtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andDtypeBetween(Integer value1, Integer value2) {
+            addCriterion("dtype between", value1, value2, "dtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andDtypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("dtype not between", value1, value2, "dtype");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

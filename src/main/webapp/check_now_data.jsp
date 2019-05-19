@@ -1,12 +1,13 @@
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
-  Date: 2017/8/3
-  Time: 10:14
+  Date: 2017/8/10
+  Time: 14:05
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -15,44 +16,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="alternate icon" type="image/png" href="img/page_logo.png">
     <link rel="stylesheet" href="layui/css/layui.css">
-    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
-    <title>查看资源</title>
-    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
-    <!--[if lt IE 9]>
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <title>查看实时资源</title>
 </head>
-
 <style>
 
     * {
         font-family: 微软雅黑;
     }
 
+    body {
+        background-color: white;
+    }
+
+    .layui-container {
+        padding: 0;
+    }
 </style>
-
 <body>
-
 <div class="layui-container">
     <table class="layui-hide" id="test" lay-filter="test"></table>
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="delete_ok_data">清空已提取数据</button>
             <button class="layui-btn layui-btn-sm" lay-event="delete_all_data">清空全部数据</button>
-            <span id="okcount"></span>
+            <lable class="layui-btn-sm" id="okcount"></lable>
             <%--<button class="layui-btn layui-btn-sm" lay-event="outline">全部禁用</button>--%>
             <%--<button class="layui-btn layui-btn-sm" lay-event="savenow">保存当前页更改</button>--%>
         </div>
     </script>
 </div>
-
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="layui/layui.all.js"></script>
-<script type="text/javascript">
+<script>
     layui.use('table', function () {
         var table = layui.table;
-
+        var index;
         var tableIns = table.render({
             elem: '#test'
             , url: 'client/getdata'
@@ -61,7 +61,7 @@
             , toolbar: '#toolbarDemo'
             , defaultToolbar: ['exports']
             , page: true  //开启分页
-            , limits: [100,500,1000]  //每页条数的选择项，默认：[10,20,30,40,50,60,70,80,90]。
+            , limits: [100, 500, 1000]  //每页条数的选择项，默认：[10,20,30,40,50,60,70,80,90]。
             , limit: 100 //每页默认显示的数量
             , method: 'post'  //提交方式
             , cols: [[ //表头
@@ -71,64 +71,49 @@
 //                , {field: 'status', title: '状态(0禁用1启用)', sort: true, edit: 'text'}
 //                , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150, align: 'center'}
             ]]
-            ,  done: function(res, curr, count){
+            , done: function (res, curr, count) {
                 //如果是异步请求数据方式，res即为你接口返回的信息。
                 //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
-                $("#okcount").html("已提取"+res.okcount+"条数据");
+                $("#okcount").text("已提取" + res.okcount + "条数据");
             }
         });
-//        table.on('checkbox(test)', function(obj){
-//            layer.alert(JSON.stringify(obj.data.ccId));
-//            console.log(obj.checked); //当前是否选中状态
-//            console.log(obj.data); //选中行的相关数据
-//            console.log(obj.type); //如果触发的是全选，则为：all，如果触发的是单选，则为：one
-//        });
 
-//        //头工具栏事件
-//        table.on('toolbar(test)', function (obj) {
-//            switch (obj.event) {
-//                case 'online':
-//                    $.post('sc/allOnLine', function (json) {
-//                        if (json.code == 1)
-//                            layer.msg("全部启用成功");
-//                    });
-//                    break;
-//                case 'outline':
-//                    $.post('sc/allOutLine', function (json) {
-//                        if (json.code == 1)
-//                            layer.msg("全部禁用成功");
-//                    });
-//                    break;
-//                case 'savenow':
-//                    var data = table.cache.testTable;
-//                    var d = '';
-//                    for (var i = 0; i < data.length; i++) {
-//                        d += ',' + data[i].ccId + ',' + data[i].status;
-//                    }
-//                    $.post('sc/update', {"data": d}, function (json) {
-//                        if (json.code == 1) {
-//                            layer.msg("保存成功");
-//                        }
-//
-//                    });
-//                    break;
-//            }
-//            ;
-//        });
-//
-//        //监听行工具事件
-//        table.on('tool(test)', function (obj) {
-//            var data = obj.data;
-//            if (obj.event === 'save') {
-//                var d = ',' + data.ccId + ',' + data.status;
-//                $.post('sc/update', {"data": d}, function (json) {
-//                    if (json.code == 1)
-//                        layer.msg("保存成功");
-//                });
-//            }
-//        });
+        //头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            index = layer.load(2);
+            switch (obj.event) {
+                case 'delete_ok_data':
+                    $.post('client/delete?type=1', function (json) {
+                        if (json.code == 1) {
+                            tableIns.reload();
+                            layer.close(index);
+                            layer.msg("已提取资源删除成功", {icon: 1});
+                        }
+
+                    });
+                    break;
+                case 'delete_all_data':
+                    layer.confirm('确定删除全部资源？', {
+                        btn: ['确定', '取消'] //按钮
+                    }, function () {
+                        $.post('client/delete?type=0', function (json) {
+                            if (json.code == 1) {
+                                tableIns.reload();
+                                layer.close(index);
+                                layer.msg("全部资源删除成功", {icon: 1});
+                            }
+
+                        });
+                    }, function () {
+                        layer.close(index);
+                    });
+
+                    break;
+            }
+        });
 
     });
 </script>
+
 </body>
 </html>

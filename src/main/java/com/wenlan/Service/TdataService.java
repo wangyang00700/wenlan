@@ -1,18 +1,17 @@
 package com.wenlan.Service;
 
 import com.wenlan.Dao.ClientMapper;
-import com.wenlan.Dao.UserMapper;
+import com.wenlan.Dao.TdataMapper;
 import com.wenlan.Model.Client;
 import com.wenlan.Model.ClientExample;
-import com.wenlan.Model.User;
-import com.wenlan.Model.UserExample;
+import com.wenlan.Model.Tdata;
+import com.wenlan.Model.TdataExample;
 import com.wenlan.Utils.ExcelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -24,14 +23,14 @@ import java.util.Map;
  */
 @Service
 @Transactional
-public class ClientService {
+public class TdataService {
 
     @Autowired
-    ClientMapper clientMapper;
+    TdataMapper tdataMapper;
 
     public Map<String, Object> getAll() {
         Map<String, Object> map = new HashMap<>();
-        map.put("list", clientMapper.selectByExample(new ClientExample()));
+        map.put("list", tdataMapper.selectByExample(new TdataExample()));
         map.put("code", 1);
         return map;
     }
@@ -41,14 +40,13 @@ public class ClientService {
         Map<String, Object> data = new HashMap();
         data.put("page", (page - 1) * limit);
         data.put("limit", limit);
-        List<Client> list = clientMapper.queryClientsBySys(data);
+        List<Tdata> list = tdataMapper.queryTdataBySys(data);
         map.put("code", 0);
         map.put("data", list);
-        map.put("count", clientMapper.countByExample(new ClientExample()));
-        ClientExample clientExample = new ClientExample();
-        clientExample.or().andUidNotEqualTo(0);
-        int count = clientMapper.countByExample(clientExample);
-        map.put("okcount", clientMapper.countByExample(clientExample));
+        map.put("count", tdataMapper.countByExample(new TdataExample()));
+        TdataExample tdataExample = new TdataExample();
+        tdataExample.or().andUidNotEqualTo(0);
+        map.put("okcount", tdataMapper.countByExample(tdataExample));
         return map;
     }
 
@@ -56,13 +54,13 @@ public class ClientService {
         Map<String, Object> map = new HashMap<>();
         //删除所有数据
         if (type == 0) {
-            clientMapper.deleteByExample(new ClientExample());
+            tdataMapper.deleteByExample(new TdataExample());
         }
         //删除已提取数据
         else if (type == 1) {
-            ClientExample clientExample = new ClientExample();
-            clientExample.or().andUidNotEqualTo(0);
-            clientMapper.deleteByExample(clientExample);
+            TdataExample TdataExample = new TdataExample();
+            TdataExample.or().andUidNotEqualTo(0);
+            tdataMapper.deleteByExample(TdataExample);
         }
         map.put("code", 1);
         return map;
@@ -95,12 +93,12 @@ public class ClientService {
 
             for (int i = 0; i < listob.size(); i++) {
                 List<Object> lo = listob.get(i);
-                Client client = new Client();
-                client.setName(String.valueOf(lo.get(0)));
-                client.setTel(String.valueOf(lo.get(1)));
-                client.setUid(0);
-                client.setStatus(0);
-                clientMapper.insertSelective(client);
+                Tdata tdata = new Tdata();
+                tdata.setName(String.valueOf(lo.get(0)));
+                tdata.setTel(String.valueOf(lo.get(1)));
+                tdata.setUid(0);
+                tdata.setStatus(0);
+                tdataMapper.insertSelective(tdata);
             }
             map.put("code", 1);
             map.put("text", "导入成功");

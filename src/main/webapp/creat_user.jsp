@@ -55,6 +55,15 @@
                 </div>
             </div>
             <div class="layui-form-item">
+                <label class="layui-form-label">提取类型</label>
+                <div class="layui-input-block">
+                    <select name="datatype" id="datatype">
+                        <option selected="" value="0">实时资源</option>
+                        <option value="1">隔夜资源</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
                 <label class="layui-form-label">提取数量</label>
                 <div class="layui-input-block">
                     <input type="number" id="count" name="count" lay-verify="required|number" placeholder="输入提取数量"
@@ -81,7 +90,8 @@
             $.post('user/insert', {
                 "username": data.field.username,
                 "password": data.field.password,
-                "count": data.field.count
+                "count": data.field.count,
+                "dtype": data.field.datatype
             }, function (json) {
                 layer.close(index);
                 if (json.code == 1) {

@@ -90,7 +90,7 @@
         //执行实例
         var uploadInst2 = upload.render({
             elem: '#test2' //绑定元素
-            , url: 'client/upload/' //上传接口
+            , url: 'tdata/upload/' //上传接口
             , field: 'excel'
             , accept: 'file'
             , exts: 'xls|xlsx'
