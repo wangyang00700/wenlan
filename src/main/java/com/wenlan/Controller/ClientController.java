@@ -60,4 +60,10 @@ public class ClientController {
     public Map<String, Object> delete(@RequestParam("type") int type) {
         return clientService.delete(type);
     }
+
+    @ResponseBody
+    @RequestMapping("/setClientByuid")
+    public Map<String, Object> setClientByuid(int uid) {
+        return clientService.setClientByuid(uid);
+    }
 }

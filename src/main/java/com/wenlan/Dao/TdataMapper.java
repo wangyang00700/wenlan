@@ -39,4 +39,6 @@ public interface TdataMapper {
     List<Tdata> queryTdataBySys(Map<String, Object> data);
 
     List<Tdata> queryTdataByUser(Map<String, Object> data);
+
+    List<Tdata> queryTdataByUserAll(Map<String, Object> data);
 }

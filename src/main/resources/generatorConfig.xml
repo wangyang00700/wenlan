@@ -37,7 +37,7 @@
         </javaClientGenerator>
 
         <!--<table tableName="tdata" domainObjectName="Tdata"></table>-->
-        <table tableName="user" domainObjectName="User"></table>
+        <!--<table tableName="user" domainObjectName="User"></table>-->
     </context>
 
 </generatorConfiguration>

@@ -94,9 +94,10 @@ public class UserService {
         return map;
     }
 
+
     public Map<String, Object> getUser(int uid, HttpSession httpSession) {
         Map<String, Object> map = new HashMap<>();
-        User user=userMapper.selectByPrimaryKey(uid);
+        User user = getUser(uid);
         httpSession.setAttribute("user", user);
         map.put("code", 1);
         map.put("user", user);
@@ -107,6 +108,15 @@ public class UserService {
         Map<String, Object> map = new HashMap<>();
         map.put("code", userMapper.deleteByPrimaryKey(uid));
         return map;
+    }
+
+    public User getUser(int uid) {
+        return userMapper.selectByPrimaryKey(uid);
+    }
+
+    public int updateUser(User user)
+    {
+       return userMapper.updateByPrimaryKeySelective(user);
     }
 }
 

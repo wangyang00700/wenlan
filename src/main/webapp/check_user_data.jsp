@@ -40,6 +40,14 @@
         <legend>资源</legend>
         <button class="layui-btn" onclick="getData()">获取资源</button>
         <button class="layui-btn" onclick="exportExcel()">导出成excel</button>
+        <%--<label style="font-size: 16px">获取资源后请及时导出,管理晚上不定时删除已用资源</label>--%>
+        <%--<blockquote class="layui-elem-quote" style="margin-top: 10px;margin-bottom:5px;width: auto">--%>
+        <%--获取资源后及时导出,管理员晚上不定时删除已用资源--%>
+        <%--</blockquote>--%>
+        <label class="layui-btn layui-btn-primary"
+               style="border:none;border-left:5px solid #009688;border-radius:0 2px 2px 0;background-color:#f2f2f2;">
+            获取资源后及时导出,管理员晚上不定时删除已用资源
+        </label>
         <table class="layui-hide" id="test" lay-filter="test"></table>
         <script type="text/html" id="index">
             <span class="tdspan"></span>
@@ -50,35 +58,43 @@
 <script type="text/javascript" src="layui/layui.all.js"></script>
 <script>
     var index;
+    var datatype = "<c:out value='${sessionScope.user.dtype}' />";
+    var uid = "<c:out value='${sessionScope.user.uid}' />";
     function getData() {
         index = layer.load(2);
-        var uid = "<c:out value='${sessionScope.user.uid}' />";
-        $.post('user/getUser?uid=' + uid, function (json) {
+        var urlpath;
+        if (datatype == 0)
+            urlpath = "client/setClientByuid";
+        else urlpath = "tdata/setTdataByuid";
+        $.post(urlpath + '?uid=' + uid, function (json) {
+            layer.close(index);
             if (json.code == 1) {
-                layer.close(index);
-                $("#userCount", parent.document).text(json.user.count);
-            }
 
+                layer.msg(json.msg, {icon: 1});
+                window.parent.getUser();
+                tableIns.reload();
+            }
+            else if (json.code == 2) {
+                layer.alert(json.msg, {icon: 1});
+            }
+            else {
+                layer.msg(json.msg, {icon: 2});
+            }
         });
     }
     function exportExcel() {
 //        index = layer.load(2);
-        var type = "<c:out value='${sessionScope.user.dtype}' />";
-        var uid = "<c:out value='${sessionScope.user.uid}' />";
         var urlpath;
-        if (type == 0)
+        if (datatype == 0)
             urlpath = "client/getUserdataAll";
         else urlpath = "tdata/getUserdataAll";
         $.post(urlpath, {uid: uid}, function (json) {
             if (json.code == 1) {
                 layer.close(index);
-                table.exportFile(['','名字', '电话'], json.data, 'xls');
+                table.exportFile(['', '姓名', '号码'], json.data, 'xls');
             }
 
         });
-//        alert(JSON.stringify(table.cache.testTable));
-//        table.exportFile(['名字', '性别'], data, 'xls');
-//        table.exportFile(tableIns.config.id, table.cache.testTable,"xls");
     }
 </script>
 <script>
@@ -86,10 +102,8 @@
     var tableIns;
     layui.use(['table'], function () {
         table = layui.table;
-        var type = "<c:out value='${sessionScope.user.dtype}' />";
-        var uid = "<c:out value='${sessionScope.user.uid}' />";
         var urlpath = "";
-        if (type == 0)
+        if (datatype == 0)
             urlpath = "client/getUserdata";
         else urlpath = "tdata/getUserdata";
         tableIns = table.render({
@@ -97,6 +111,7 @@
             , url: urlpath
             , where: {uid: uid}
             , id: 'testTable'
+            , title: '资源表'
             , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             , page: true  //开启分页
             , limits: [100, 500, 1000]  //每页条数的选择项，默认：[10,20,30,40,50,60,70,80,90]。

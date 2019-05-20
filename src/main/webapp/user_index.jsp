@@ -8,16 +8,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="java.*" %>
-<%
-    User dtype = (User) session.getAttribute("user");
-    String type = "";
-    if (dtype != null) {
-        if (dtype.getDtype() == 0)
-            type = "实时资源";
-        else type = "隔夜资源";
-    }
+<%--<%--%>
+<%--User dtype = (User) session.getAttribute("user");--%>
+<%--String type = "";--%>
+<%--if (dtype != null) {--%>
+<%--if (dtype.getDtype() == 0)--%>
+<%--type = "实时资源";--%>
+<%--else type = "隔夜资源";--%>
+<%--}--%>
 
-%>
+<%--%>--%>
 <html>
 <head>
     <meta charset="utf-8">
@@ -60,8 +60,7 @@
             </li>
             <li class="layui-nav-item">
                 <a href="javascript:;">
-                    提取类型：
-                    <% out.print(type); %>
+                    提取类型：<label id="datatype"></label>
                 </a>
             </li>
         </ul>
@@ -96,6 +95,7 @@
 <script>
     $(function () {
         check_login();
+        getUser();
     });
     //JavaScript代码区域
     layui.use('element', function () {
@@ -105,6 +105,15 @@
 
 </script>
 <script>
+    function getUser() {
+        var uid = "<c:out value='${sessionScope.user.uid}' />";
+        $.post('user/getUser?uid=' + uid, function (json) {
+            $("#userCount").text(json.user.count);
+            if (json.user.dtype == 0)
+                $("#datatype").text("实时资源");
+            else  $("#datatype").text("隔夜资源");
+        });
+    }
     function check_login() {
         var type = "<c:out value='${sessionScope.type}' />";
         if (type == "") {

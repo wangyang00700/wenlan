@@ -48,8 +48,20 @@ public class TdataController {
     }
 
     @ResponseBody
+    @RequestMapping("/getUserdataAll")
+    public Map<String, Object> getUserdataAll(int uid) {
+        return tdataService.queryTdataByUserAll(uid);
+    }
+
+    @ResponseBody
     @RequestMapping("/delete")
     public Map<String, Object> delete(@RequestParam("type") int type) {
         return tdataService.delete(type);
+    }
+
+    @ResponseBody
+    @RequestMapping("/setTdataByuid")
+    public Map<String, Object> setTdataByuid(int uid) {
+        return tdataService.setTdataByuid(uid);
     }
 }

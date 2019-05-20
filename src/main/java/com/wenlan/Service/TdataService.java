@@ -2,10 +2,8 @@ package com.wenlan.Service;
 
 import com.wenlan.Dao.ClientMapper;
 import com.wenlan.Dao.TdataMapper;
-import com.wenlan.Model.Client;
-import com.wenlan.Model.ClientExample;
-import com.wenlan.Model.Tdata;
-import com.wenlan.Model.TdataExample;
+import com.wenlan.Dao.UserMapper;
+import com.wenlan.Model.*;
 import com.wenlan.Utils.ExcelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +25,8 @@ public class TdataService {
 
     @Autowired
     TdataMapper tdataMapper;
+    @Autowired
+    UserService userService;
 
     public Map<String, Object> getAll() {
         Map<String, Object> map = new HashMap<>();
@@ -62,11 +62,57 @@ public class TdataService {
         map.put("data", list);
         map.put("limit", limit);
         TdataExample tdataExample = new TdataExample();
-        tdataExample.or().andUidEqualTo(0);
+        tdataExample.or().andUidEqualTo(uid);
         map.put("count", tdataMapper.countByExample(tdataExample));
 //        TdataExample tdataExample = new TdataExample();
 //        tdataExample.or().andUidNotEqualTo(0);
 //        map.put("okcount", tdataMapper.countByExample(tdataExample));
+        return map;
+    }
+
+    public Map<String, Object> queryTdataByUserAll(int uid) {
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> data = new HashMap();
+        data.put("uid", uid);
+        List<Tdata> list = tdataMapper.queryTdataByUserAll(data);
+        map.put("code", 1);
+        map.put("data", list);
+        return map;
+    }
+
+    public Map<String, Object> setTdataByuid(int uid) {
+        User user = userService.getUser(uid);
+        //当用户提取量不够时
+        if (user.getCount() == 0) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("code", 0);
+            map.put("msg", "用户提取量不足,请联系管理员充值");
+            return map;
+        }
+        List<Tdata> tdatas = null;
+        TdataExample tdataExample = new TdataExample();
+        tdataExample.or().andUidEqualTo(0);
+        tdatas = tdataMapper.selectByExample(tdataExample);
+        if (tdatas.size() < user.getCount()) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("code", 0);
+            map.put("msg", "库存不够,请联系管理员补充");
+            return map;
+        }
+
+        int datacount = user.getCount();
+        for (int i = 0; i < tdatas.size() && datacount > 0; i++) {
+            tdatas.get(i).setUid(uid);
+            if (tdataMapper.updateByPrimaryKey(tdatas.get(i)) == 1)
+                datacount--;
+        }
+
+        user.setCount(datacount);
+        userService.updateUser(user);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", 1);
+        map.put("msg", "获取成功");
         return map;
     }
 

@@ -222,13 +222,16 @@
       tel = #{tel,jdbcType=VARCHAR},
       uid = #{uid,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
-      version = #{version,jdbcType=VARCHAR}
-    where tdid = #{tdid,jdbcType=INTEGER}
+      version = version+1
+    where tdid = #{tdid,jdbcType=INTEGER} and version=#{version}
   </update>
   <select id="queryTdataBySys"  parameterType="map" resultMap="BaseResultMap">
     select * from tdata limit #{page} , #{limit}
   </select>
   <select id="queryTdataByUser"  parameterType="map" resultMap="BaseResultMap">
     select * from tdata WHERE uid= #{uid} limit #{page} , #{limit}
+  </select>
+  <select id="queryTdataByUserAll"  parameterType="map" resultMap="BaseResultMap">
+    select name,tel from tdata WHERE uid= #{uid}
   </select>
 </mapper>

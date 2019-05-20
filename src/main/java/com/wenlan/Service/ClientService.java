@@ -29,7 +29,7 @@ public class ClientService {
     @Autowired
     ClientMapper clientMapper;
     @Autowired
-    UserMapper userMapper;
+    UserService userService;
 
     public Map<String, Object> getAll() {
         Map<String, Object> map = new HashMap<>();
@@ -78,14 +78,55 @@ public class ClientService {
     public Map<String, Object> queryClientsByUserAll(int uid) {
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> data = new HashMap();
-        data.put("page", 0);
-        User user = userMapper.selectByPrimaryKey(uid);
-        data.put("limit", user.getCount());
         data.put("uid", uid);
         List<Client> list = clientMapper.queryClientsByUserAll(data);
         map.put("code", 1);
         map.put("data", list);
         return map;
+    }
+
+    public Map<String, Object> setClientByuid(int uid) {
+        User user = userService.getUser(uid);
+        //当用户提取量不够时
+        if (user.getCount() == 0) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("code", 0);
+            map.put("msg", "用户提取量不足,请联系管理员充值");
+            return map;
+        }
+        List<Client> clients = null;
+        ClientExample clientExample = new ClientExample();
+        clientExample.or().andUidEqualTo(0);
+        clients = clientMapper.selectByExample(clientExample);
+        if (clients.size() < user.getCount()) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("code", 0);
+            map.put("msg", "库存不够,请联系管理员补充");
+            return map;
+        }
+
+        int datacount = user.getCount();
+        for (int i = 0; i < clients.size() && datacount > 0; i++) {
+            clients.get(i).setUid(uid);
+            if (clientMapper.updateByPrimaryKey(clients.get(i)) == 1)
+                datacount--;
+        }
+
+        user.setCount(datacount);
+        userService.updateUser(user);
+
+        if (datacount > 0) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("code", 2);
+            map.put("msg", "获取成功,库存临时不够,只提取一部分,剩余请看提取量");
+            return map;
+        } else {
+            Map<String, Object> map = new HashMap<>();
+            map.put("code", 1);
+            map.put("msg", "获取成功");
+            return map;
+        }
+
     }
 
     public Map<String, Object> delete(int type) {
