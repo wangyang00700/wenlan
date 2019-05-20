@@ -102,6 +102,7 @@
                 layer.close(index);
                 if (res.code == 1)
                     layer.msg('上传成功', {icon: 1});
+                else layer.alert(res.text);
             }
             , error: function () {
                 //请求异常回调

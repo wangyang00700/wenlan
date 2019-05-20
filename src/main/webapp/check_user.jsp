@@ -95,7 +95,7 @@
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , page: true //开启分页
                 , limits: [10, 30, 50]  //每页条数的选择项，默认：[10,20,30,40,50,60,70,80,90]。
-                , limit: 5 //每页默认显示的数量
+                , limit: 10 //每页默认显示的数量
                 , method: 'post'  //提交方式
                 , cols: [[ //表头
                     {field: 'index', title: '序号', templet: "#index"}
@@ -117,9 +117,6 @@
                     layui.each($('.tdspan'), function (index, item) {
                         $(item).text((curr - 1) * limit + index + 1);
                     });
-//                $("li").each(function () {
-//                    alert($(this).text())
-//                });
                 }
 
             })

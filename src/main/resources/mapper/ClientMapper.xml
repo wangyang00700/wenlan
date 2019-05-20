@@ -234,4 +234,12 @@
   <select id="queryClientsByUserAll"  parameterType="map" resultMap="BaseResultMap">
     select name,tel from client WHERE uid= #{uid}
   </select>
+    <insert id="insertSome" parameterType="java.util.List">
+        insert into client (cid, name, tel,uid, status, version)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.cid,jdbcType=INTEGER}, #{item.name,jdbcType=VARCHAR},#{item.tel,jdbcType=VARCHAR}
+            ,#{item.uid,jdbcType=INTEGER}, #{item.status,jdbcType=INTEGER},#{item.version,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
 </mapper>

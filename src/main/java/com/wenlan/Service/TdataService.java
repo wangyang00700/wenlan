@@ -1,9 +1,9 @@
 package com.wenlan.Service;
 
-import com.wenlan.Dao.ClientMapper;
 import com.wenlan.Dao.TdataMapper;
-import com.wenlan.Dao.UserMapper;
-import com.wenlan.Model.*;
+import com.wenlan.Model.Tdata;
+import com.wenlan.Model.TdataExample;
+import com.wenlan.Model.User;
 import com.wenlan.Utils.ExcelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,7 +157,7 @@ public class TdataService {
         List<List<Object>> listob = null;
         try {
             listob = new ExcelUtils().getBankListByExcel(in, file.getOriginalFilename());
-
+            List<Tdata> tdatas = new ArrayList<>();
             for (int i = 0; i < listob.size(); i++) {
                 List<Object> lo = listob.get(i);
                 Tdata tdata = new Tdata();
@@ -164,8 +165,10 @@ public class TdataService {
                 tdata.setTel(String.valueOf(lo.get(1)));
                 tdata.setUid(0);
                 tdata.setStatus(0);
-                tdataMapper.insertSelective(tdata);
+                tdata.setVersion("1");
+                tdatas.add(tdata);
             }
+            tdataMapper.insertSome(tdatas);
             map.put("code", 1);
             map.put("text", "导入成功");
         } catch (Exception e) {

@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -167,9 +168,9 @@ public class ClientService {
         }
 
         List<List<Object>> listob = null;
+        List<Client> clients = new ArrayList<>();
         try {
             listob = new ExcelUtils().getBankListByExcel(in, file.getOriginalFilename());
-
             for (int i = 0; i < listob.size(); i++) {
                 List<Object> lo = listob.get(i);
                 Client client = new Client();
@@ -177,8 +178,10 @@ public class ClientService {
                 client.setTel(String.valueOf(lo.get(1)));
                 client.setUid(0);
                 client.setStatus(0);
-                clientMapper.insertSelective(client);
+                client.setVersion("1");
+                clients.add(client);
             }
+            clientMapper.insertSome(clients);
             map.put("code", 1);
             map.put("text", "导入成功");
         } catch (Exception e) {

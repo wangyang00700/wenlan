@@ -234,4 +234,12 @@
   <select id="queryTdataByUserAll"  parameterType="map" resultMap="BaseResultMap">
     select name,tel from tdata WHERE uid= #{uid}
   </select>
+  <insert id="insertSome" parameterType="java.util.List">
+    insert into tdata (tdid, name, tel,uid, status, version)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.tdid,jdbcType=INTEGER}, #{item.name,jdbcType=VARCHAR},#{item.tel,jdbcType=VARCHAR}
+      ,#{item.uid,jdbcType=INTEGER}, #{item.status,jdbcType=INTEGER},#{item.version,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
 </mapper>

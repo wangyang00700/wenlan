@@ -40,4 +40,7 @@ public interface ClientMapper {
     List<Client> queryClientsByUser(Map<String, Object> data);
 
     List<Client> queryClientsByUserAll(Map<String, Object> data);
+
+    int insertSome(List<Client> clients);
+
 }
