@@ -38,7 +38,13 @@ public class TdataController {
     @ResponseBody
     @RequestMapping("/getdata")
     public Map<String, Object> queryClientsBySys(int page, int limit) {
-        return tdataService.queryClientsBySys(page, limit);
+        return tdataService.queryTdataBySys(page, limit);
+    }
+
+    @ResponseBody
+    @RequestMapping("/getUserdata")
+    public Map<String, Object> getUserdata(int page, int limit, int uid) {
+        return tdataService.queryTdataByUser(page, limit, uid);
     }
 
     @ResponseBody

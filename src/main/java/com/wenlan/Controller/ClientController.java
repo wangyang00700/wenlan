@@ -44,6 +44,18 @@ public class ClientController {
     }
 
     @ResponseBody
+    @RequestMapping("/getUserdata")
+    public Map<String, Object> getUserdata(int page, int limit, int uid) {
+        return clientService.queryClientsByUser(page, limit, uid);
+    }
+
+    @ResponseBody
+    @RequestMapping("/getUserdataAll")
+    public Map<String, Object> getUserdataAll(int uid) {
+        return clientService.queryClientsByUserAll(uid);
+    }
+
+    @ResponseBody
     @RequestMapping("/delete")
     public Map<String, Object> delete(@RequestParam("type") int type) {
         return clientService.delete(type);

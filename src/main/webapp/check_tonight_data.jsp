@@ -46,6 +46,9 @@
             <%--<button class="layui-btn layui-btn-sm" lay-event="savenow">保存当前页更改</button>--%>
         </div>
     </script>
+    <script type="text/html" id="index">
+        <span class="tdspan"></span>
+    </script>
 </div>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="layui/layui.all.js"></script>
@@ -65,13 +68,17 @@
             , limit: 100 //每页默认显示的数量
             , method: 'post'  //提交方式
             , cols: [[ //表头
-                {field: 'tdid', title: 'ID', sort: true}
+                {field: 'index', title: '序号', templet: "#index"}
                 , {field: 'name', title: '姓名', sort: true}
                 , {field: 'tel', title: '电话'}
 //                , {field: 'status', title: '状态(0禁用1启用)', sort: true, edit: 'text'}
 //                , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150, align: 'center'}
             ]]
             , done: function (res, curr, count) {
+                var limit = res.limit;
+                layui.each($('.tdspan'), function (index, item) {
+                    $(item).text((curr - 1) * limit + index + 1);
+                });
                 //如果是异步请求数据方式，res即为你接口返回的信息。
                 //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
                 $("#okcount").html("已提取" + res.okcount + "条数据");
@@ -80,9 +87,9 @@
 
         //头工具栏事件
         table.on('toolbar(test)', function (obj) {
-            index = layer.load(2);
             switch (obj.event) {
                 case 'delete_ok_data':
+                    index = layer.load(2);
                     $.post('tdata/delete?type=1', function (json) {
                         if (json.code == 1) {
                             tableIns.reload();
@@ -96,6 +103,7 @@
                     layer.confirm('确定删除全部资源？', {
                         btn: ['确定', '取消'] //按钮
                     }, function () {
+                        index = layer.load(2);
                         $.post('tdata/delete?type=0', function (json) {
                             if (json.code == 1) {
                                 tableIns.reload();

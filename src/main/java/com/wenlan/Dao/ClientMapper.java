@@ -38,4 +38,6 @@ public interface ClientMapper {
     List<Client> queryClientsBySys(Map<String, Object> data);
 
     List<Client> queryClientsByUser(Map<String, Object> data);
+
+    List<Client> queryClientsByUserAll(Map<String, Object> data);
 }

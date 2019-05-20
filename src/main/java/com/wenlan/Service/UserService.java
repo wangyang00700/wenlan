@@ -72,6 +72,7 @@ public class UserService {
         List<User> users = userMapper.queryUserBySys(data);
         map.put("code", 0);
         map.put("data", users);
+        map.put("limit", limit);
         UserExample userExample = new UserExample();
         userExample.or().andTypeEqualTo(1);
         map.put("count", userMapper.countByExample(userExample));
@@ -90,6 +91,15 @@ public class UserService {
             userMapper.updateByPrimaryKeySelective(user);
         }
         map.put("code", 1);
+        return map;
+    }
+
+    public Map<String, Object> getUser(int uid, HttpSession httpSession) {
+        Map<String, Object> map = new HashMap<>();
+        User user=userMapper.selectByPrimaryKey(uid);
+        httpSession.setAttribute("user", user);
+        map.put("code", 1);
+        map.put("user", user);
         return map;
     }
 

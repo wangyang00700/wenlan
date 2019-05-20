@@ -231,4 +231,7 @@
   <select id="queryClientsByUser"  parameterType="map" resultMap="BaseResultMap">
     select * from client WHERE uid= #{uid} limit #{page} , #{limit}
   </select>
+  <select id="queryClientsByUserAll"  parameterType="map" resultMap="BaseResultMap">
+    select name,tel from client WHERE uid= #{uid} limit #{page} , #{limit}
+  </select>
 </mapper>

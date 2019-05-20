@@ -75,6 +75,9 @@
                 <option value="1">隔夜资源</option>
             </select>
         </script>
+        <script type="text/html" id="index">
+            <span class="tdspan"></span>
+        </script>
     </fieldset>
 </div>
 <script type="text/javascript" src="js/jquery.min.js"></script>
@@ -84,35 +87,43 @@
         var table = layui.table, form = layui.form;
 
         var tableIns = table.render({
-            elem: '#test'
-            , url: 'user/lookUser'
-            , id: 'testTable'
-            , toolbar: '#toolbarDemo'
-            , defaultToolbar: []
-            , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-            , page: true  //开启分页
-            , limits: [10, 30, 50]  //每页条数的选择项，默认：[10,20,30,40,50,60,70,80,90]。
-            , limit: 10 //每页默认显示的数量
-            , method: 'post'  //提交方式
-            , cols: [[ //表头
-                {field: 'uid', title: 'ID', sort: true}
-                , {field: 'username', title: '账号', sort: true}
-                , {field: 'password', title: '密码'}
-                , {field: 'dtype', title: '提取类型', templet: "#select"}
-                , {field: 'count', title: '提取量', sort: true, edit: 'number'}
-                , {fixed: 'right', title: '操作', toolbar: '#barDemo', align: 'center'}
-//                , {field: 'status', title: '状态(0禁用1启用)', sort: true, edit: 'text'}
+                elem: '#test'
+                , url: 'user/lookUser'
+                , id: 'testTable'
+                , toolbar: '#toolbarDemo'
+                , defaultToolbar: []
+                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , page: true //开启分页
+                , limits: [10, 30, 50]  //每页条数的选择项，默认：[10,20,30,40,50,60,70,80,90]。
+                , limit: 5 //每页默认显示的数量
+                , method: 'post'  //提交方式
+                , cols: [[ //表头
+                    {field: 'index', title: '序号', templet: "#index"}
+                    , {field: 'username', title: '账号'}
+                    , {field: 'password', title: '密码'}
+                    , {field: 'dtype', title: '提取类型', templet: "#select"}
+                    , {field: 'count', title: '提取量', edit: 'number'}
+                    , {fixed: 'right', title: '操作', toolbar: '#barDemo', align: 'center'}
+//                , {field: 'status', title: '状态(0禁用1启用)', edit: 'text'}
 //                , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150, align: 'center'}
-            ]],
-            done: function (res, curr, count) {
-                layui.each($('td select'), function (index, item) {
-                    var elem = $(item);
-                    elem.val(res.data[index].dtype).parents('div.layui-table-cell').css('overflow', 'visible');
-                });
-                form.render();
-            }
+                ]],
+                done: function (res, curr, count) {
+                    layui.each($('td select'), function (index, item) {
+                        var elem = $(item);
+                        elem.val(res.data[index].dtype).parents('div.layui-table-cell').css('overflow', 'visible');
+                    });
+                    form.render();
+                    var limit = res.limit;
+                    layui.each($('.tdspan'), function (index, item) {
+                        $(item).text((curr - 1) * limit + index + 1);
+                    });
+//                $("li").each(function () {
+//                    alert($(this).text())
+//                });
+                }
 
-        });
+            })
+        ;
 
         form.on('select(dtype)', function (data) {
             var elem = $(data.elem);

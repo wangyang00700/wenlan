@@ -54,6 +54,12 @@ public class UserController {
     }
 
     @ResponseBody
+    @RequestMapping("/getUser")
+    public Map<String, Object> getUser(int uid, HttpSession httpSession) {
+        return userService.getUser(uid, httpSession);
+    }
+
+    @ResponseBody
     @RequestMapping("/delete")
     public Map<String, Object> delete(int uid) {
         return userService.delete(uid);

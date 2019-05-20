@@ -28,6 +28,8 @@ public class ClientService {
 
     @Autowired
     ClientMapper clientMapper;
+    @Autowired
+    UserMapper userMapper;
 
     public Map<String, Object> getAll() {
         Map<String, Object> map = new HashMap<>();
@@ -44,11 +46,45 @@ public class ClientService {
         List<Client> list = clientMapper.queryClientsBySys(data);
         map.put("code", 0);
         map.put("data", list);
+        map.put("limit", limit);
         map.put("count", clientMapper.countByExample(new ClientExample()));
         ClientExample clientExample = new ClientExample();
         clientExample.or().andUidNotEqualTo(0);
         int count = clientMapper.countByExample(clientExample);
         map.put("okcount", clientMapper.countByExample(clientExample));
+        return map;
+    }
+
+    public Map<String, Object> queryClientsByUser(int page, int limit, int uid) {
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> data = new HashMap();
+        data.put("page", (page - 1) * limit);
+        data.put("limit", limit);
+        data.put("uid", uid);
+        List<Client> list = clientMapper.queryClientsByUser(data);
+        map.put("code", 0);
+        map.put("data", list);
+        map.put("limit", limit);
+        ClientExample clientExample = new ClientExample();
+        clientExample.or().andUidEqualTo(uid);
+        map.put("count", clientMapper.countByExample(clientExample));
+//        ClientExample clientExample = new ClientExample();
+//        clientExample.or().andUidNotEqualTo(0);
+//        int count = clientMapper.countByExample(clientExample);
+//        map.put("okcount", clientMapper.countByExample(clientExample));
+        return map;
+    }
+
+    public Map<String, Object> queryClientsByUserAll(int uid) {
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> data = new HashMap();
+        data.put("page", 0);
+        User user = userMapper.selectByPrimaryKey(uid);
+        data.put("limit", user.getCount());
+        data.put("uid", uid);
+        List<Client> list = clientMapper.queryClientsByUserAll(data);
+        map.put("code", 1);
+        map.put("data", list);
         return map;
     }
 
