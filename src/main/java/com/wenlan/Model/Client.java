@@ -13,6 +13,8 @@ public class Client {
 
     private String version;
 
+    private String date;
+
     public Integer getCid() {
         return cid;
     }
@@ -59,5 +61,13 @@ public class Client {
 
     public void setVersion(String version) {
         this.version = version == null ? null : version.trim();
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date == null ? null : date.trim();
     }
 }

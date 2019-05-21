@@ -2,10 +2,8 @@ package com.wenlan.Service;
 
 import com.wenlan.Dao.ClientMapper;
 import com.wenlan.Dao.UserMapper;
-import com.wenlan.Model.Client;
-import com.wenlan.Model.ClientExample;
-import com.wenlan.Model.User;
-import com.wenlan.Model.UserExample;
+import com.wenlan.Model.*;
+import com.wenlan.Utils.DateTimeUtil;
 import com.wenlan.Utils.ExcelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,12 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by 59100 on 2019/5/16.
@@ -80,7 +76,7 @@ public class ClientService {
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> data = new HashMap();
         data.put("uid", uid);
-        List<Client> list = clientMapper.queryClientsByUserAll(data);
+        List<DataSimple> list = clientMapper.queryClientsByUserAll(data);
         map.put("code", 1);
         map.put("data", list);
         return map;
@@ -107,12 +103,24 @@ public class ClientService {
         }
 
         int datacount = user.getCount();
-        for (int i = 0; i < clients.size() && datacount > 0; i++) {
-            clients.get(i).setUid(uid);
-            if (clientMapper.updateByPrimaryKey(clients.get(i)) == 1)
-                datacount--;
-        }
+        Calendar calendar = null;
+        int timeLimit = 30;
+        if (datacount <= 1500)
+            calendar = DateTimeUtil.getBeforeHourTime(1);
+        else if (datacount > 1500)
+            calendar = DateTimeUtil.getBeforeHourTime(2);
+        String time = DateTimeUtil.getNextMinuteTime(calendar, 0);
 
+        for (int i = 0, j = 1; i < clients.size() && datacount > 0; i++) {
+            clients.get(i).setUid(uid);
+            if (j % timeLimit == 0)
+                time = DateTimeUtil.getNextMinuteTime(calendar, 1);
+            clients.get(i).setDate(time);
+            if (clientMapper.updateByPrimaryKey(clients.get(i)) == 1) {
+                datacount--;
+                j++;
+            }
+        }
         user.setCount(datacount);
         userService.updateUser(user);
 

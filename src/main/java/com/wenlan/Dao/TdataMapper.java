@@ -1,6 +1,6 @@
 package com.wenlan.Dao;
 
-import com.wenlan.Model.Client;
+import com.wenlan.Model.DataSimple;
 import com.wenlan.Model.Tdata;
 import com.wenlan.Model.TdataExample;
 
@@ -40,7 +40,7 @@ public interface TdataMapper {
 
     List<Tdata> queryTdataByUser(Map<String, Object> data);
 
-    List<Tdata> queryTdataByUserAll(Map<String, Object> data);
+    List<DataSimple> queryTdataByUserAll(Map<String, Object> data);
 
     int insertSome(List<Tdata> tdatas);
 }

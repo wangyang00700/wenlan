@@ -46,7 +46,7 @@
         <%--</blockquote>--%>
         <label class="layui-btn layui-btn-primary"
                style="border:none;border-left:5px solid #009688;border-radius:0 2px 2px 0;background-color:#f2f2f2;">
-            获取资源后及时导出,管理员晚上不定时删除已用资源
+            获取资源后及时导出,管理员晚上不定时删除已获取资源
         </label>
         <table class="layui-hide" id="test" lay-filter="test"></table>
         <script type="text/html" id="index">
@@ -83,7 +83,7 @@
         });
     }
     function exportExcel() {
-//        index = layer.load(2);
+        index = layer.load(2);
         var urlpath;
         if (datatype == 0)
             urlpath = "client/getUserdataAll";
@@ -91,7 +91,8 @@
         $.post(urlpath, {uid: uid}, function (json) {
             if (json.code == 1) {
                 layer.close(index);
-                table.exportFile(['', '姓名', '号码'], json.data, 'xls');
+//                JSONToExcelConvertor(json.data,'资源表');
+                table.exportFile(['姓名', '号码', '日期'], json.data, 'xls');
             }
 
         });
@@ -134,6 +135,81 @@
         });
     });
 </script>
+<%--<script>--%>
+    <%--function JSONToExcelConvertor(JSONData, FileName) {--%>
+        <%--//先转化json--%>
+        <%--var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;--%>
+        <%--var excel = '<table>';--%>
+        <%--var row = "<tr>";--%>
+        <%--//设置表头--%>
+        <%--var keys = Object.keys(JSONData[0]);--%>
+        <%--keys.forEach(function (item) {--%>
+            <%--switch (item) {--%>
+                <%--case'name':--%>
+                    <%--item = '姓名';--%>
+                    <%--break;--%>
+                <%--case'tel':--%>
+                    <%--item = '电话';--%>
+                    <%--break;--%>
+                <%--case'date':--%>
+                    <%--item = '日期';--%>
+                    <%--break;--%>
+            <%--}--%>
+            <%--row += "<td>" + item + '</td>';--%>
+        <%--});--%>
+        <%--//换行--%>
+        <%--excel += row + "</tr>";--%>
+        <%--//设置数据--%>
+        <%--for (var i = 0; i < arrData.length; i++) {--%>
+            <%--var row = "<tr>";--%>
+            <%--for (var index in arrData[i]) {--%>
+                <%--//var value = arrData[i][index] === "." ? "" : arrData[i][index];--%>
+                <%--row += '<td>' + arrData[i][index] + '</td>';--%>
+            <%--}--%>
+            <%--excel += row + "</tr>";--%>
+        <%--}--%>
 
+        <%--excel += "</table>";--%>
+
+        <%--var excelFile = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:excel' xmlns='http://www.w3.org/TR/REC-html40'>";--%>
+        <%--excelFile += '<meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">';--%>
+        <%--excelFile += '<meta http-equiv="content-type" content="application/vnd.ms-excel';--%>
+        <%--excelFile += '; charset=UTF-8">';--%>
+        <%--excelFile += "<head>";--%>
+        <%--excelFile += "<!--[if gte mso 9]>";--%>
+        <%--excelFile += "<xml>";--%>
+        <%--excelFile += "<x:ExcelWorkbook>";--%>
+        <%--excelFile += "<x:ExcelWorksheets>";--%>
+        <%--excelFile += "<x:ExcelWorksheet>";--%>
+        <%--excelFile += "<x:Name>";--%>
+        <%--excelFile += "{worksheet}";--%>
+        <%--excelFile += "</x:Name>";--%>
+        <%--excelFile += "<x:WorksheetOptions>";--%>
+        <%--excelFile += "<x:DisplayGridlines/>";--%>
+        <%--excelFile += "</x:WorksheetOptions>";--%>
+        <%--excelFile += "</x:ExcelWorksheet>";--%>
+        <%--excelFile += "</x:ExcelWorksheets>";--%>
+        <%--excelFile += "</x:ExcelWorkbook>";--%>
+        <%--excelFile += "</xml>";--%>
+        <%--excelFile += "<![endif]-->";--%>
+        <%--excelFile += "</head>";--%>
+        <%--excelFile += "<body>";--%>
+        <%--excelFile += excel;--%>
+        <%--excelFile += "</body>";--%>
+        <%--excelFile += "</html>";--%>
+
+        <%--var uri = 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(excelFile);--%>
+
+        <%--var link = document.createElement("a");--%>
+        <%--link.href = uri;--%>
+
+        <%--link.style = "visibility:hidden";--%>
+        <%--link.download = FileName + ".xls";--%>
+
+        <%--document.body.appendChild(link);--%>
+        <%--link.click();--%>
+        <%--document.body.removeChild(link);--%>
+    <%--}--%>
+<%--</script>--%>
 </body>
 </html>

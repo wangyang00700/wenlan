@@ -493,6 +493,76 @@ public class ClientExample {
             addCriterion("version not between", value1, value2, "version");
             return (Criteria) this;
         }
+
+        public Criteria andDateIsNull() {
+            addCriterion("date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDateIsNotNull() {
+            addCriterion("date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDateEqualTo(String value) {
+            addCriterion("date =", value, "date");
+            return (Criteria) this;
+        }
+
+        public Criteria andDateNotEqualTo(String value) {
+            addCriterion("date <>", value, "date");
+            return (Criteria) this;
+        }
+
+        public Criteria andDateGreaterThan(String value) {
+            addCriterion("date >", value, "date");
+            return (Criteria) this;
+        }
+
+        public Criteria andDateGreaterThanOrEqualTo(String value) {
+            addCriterion("date >=", value, "date");
+            return (Criteria) this;
+        }
+
+        public Criteria andDateLessThan(String value) {
+            addCriterion("date <", value, "date");
+            return (Criteria) this;
+        }
+
+        public Criteria andDateLessThanOrEqualTo(String value) {
+            addCriterion("date <=", value, "date");
+            return (Criteria) this;
+        }
+
+        public Criteria andDateLike(String value) {
+            addCriterion("date like", value, "date");
+            return (Criteria) this;
+        }
+
+        public Criteria andDateNotLike(String value) {
+            addCriterion("date not like", value, "date");
+            return (Criteria) this;
+        }
+
+        public Criteria andDateIn(List<String> values) {
+            addCriterion("date in", values, "date");
+            return (Criteria) this;
+        }
+
+        public Criteria andDateNotIn(List<String> values) {
+            addCriterion("date not in", values, "date");
+            return (Criteria) this;
+        }
+
+        public Criteria andDateBetween(String value1, String value2) {
+            addCriterion("date between", value1, value2, "date");
+            return (Criteria) this;
+        }
+
+        public Criteria andDateNotBetween(String value1, String value2) {
+            addCriterion("date not between", value1, value2, "date");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

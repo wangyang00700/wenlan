@@ -3,6 +3,7 @@ package com.wenlan.Utils;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -45,6 +46,20 @@ public class DateTimeUtil {
 
     public static String getCurrentDateAndTime2() {
         return DateTimeUtil.getCurrentDate("yyyy-MM-dd HH-mm-ss");
+    }
+
+    public static Calendar getBeforeHourTime(int hour) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Calendar calendar = Calendar.getInstance();
+        //往前推hour小时
+        calendar.add(Calendar.HOUR, -hour);
+        return calendar;
+    }
+
+    public static String getNextMinuteTime(Calendar calendar, int minute) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        calendar.add(Calendar.MINUTE, minute);
+        return df.format(calendar.getTime());
     }
 
     public static String getNewRandomCode(int codeLen) {

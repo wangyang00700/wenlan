@@ -81,6 +81,7 @@
                 layer.close(index);
                 if (res.code == 1)
                     layer.msg('上传成功', {icon: 1});
+                else layer.alert("格式有误，请另存为一份新文档上传");
             }
             , error: function () {
                 //请求异常回调
@@ -102,7 +103,7 @@
                 layer.close(index);
                 if (res.code == 1)
                     layer.msg('上传成功', {icon: 1});
-                else layer.alert(res.text);
+                else layer.alert("格式有误，请另存为一份新文档上传");
             }
             , error: function () {
                 //请求异常回调

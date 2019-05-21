@@ -8,6 +8,12 @@
     <result column="uid" property="uid" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="version" property="version" jdbcType="VARCHAR" />
+    <result column="date" property="date" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="SimpleResultMap" type="com.wenlan.Model.DataSimple" >
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="date" property="date" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -68,7 +74,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    tdid, name, tel, uid, status, version
+    tdid, name, tel, uid, status, version, date
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wenlan.Model.TdataExample" >
     select
@@ -85,7 +91,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
+    select 
     <include refid="Base_Column_List" />
     from tdata
     where tdid = #{tdid,jdbcType=INTEGER}
@@ -102,11 +108,11 @@
   </delete>
   <insert id="insert" parameterType="com.wenlan.Model.Tdata" >
     insert into tdata (tdid, name, tel, 
-      uid, status, version
-      )
+      uid, status, version, 
+      date)
     values (#{tdid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, 
-      #{uid,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{version,jdbcType=VARCHAR}
-      )
+      #{uid,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{version,jdbcType=VARCHAR}, 
+      #{date,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.wenlan.Model.Tdata" >
     insert into tdata
@@ -129,6 +135,9 @@
       <if test="version != null" >
         version,
       </if>
+      <if test="date != null" >
+        date,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tdid != null" >
@@ -148,6 +157,9 @@
       </if>
       <if test="version != null" >
         #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -178,6 +190,9 @@
       <if test="record.version != null" >
         version = #{record.version,jdbcType=VARCHAR},
       </if>
+      <if test="record.date != null" >
+        date = #{record.date,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -190,7 +205,8 @@
       tel = #{record.tel,jdbcType=VARCHAR},
       uid = #{record.uid,jdbcType=INTEGER},
       status = #{record.status,jdbcType=INTEGER},
-      version = #{record.version,jdbcType=VARCHAR}
+      version = #{record.version,jdbcType=VARCHAR},
+      date = #{record.date,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -213,6 +229,9 @@
       <if test="version != null" >
         version = #{version,jdbcType=VARCHAR},
       </if>
+      <if test="date != null" >
+        date = #{date,jdbcType=VARCHAR},
+      </if>
     </set>
     where tdid = #{tdid,jdbcType=INTEGER}
   </update>
@@ -222,8 +241,9 @@
       tel = #{tel,jdbcType=VARCHAR},
       uid = #{uid,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
-      version = version+1
-    where tdid = #{tdid,jdbcType=INTEGER} and version=#{version}
+      version = #{version,jdbcType=VARCHAR},
+      date = #{date,jdbcType=VARCHAR}
+    where tdid = #{tdid,jdbcType=INTEGER}
   </update>
   <select id="queryTdataBySys"  parameterType="map" resultMap="BaseResultMap">
     select * from tdata limit #{page} , #{limit}
@@ -231,15 +251,16 @@
   <select id="queryTdataByUser"  parameterType="map" resultMap="BaseResultMap">
     select * from tdata WHERE uid= #{uid} limit #{page} , #{limit}
   </select>
-  <select id="queryTdataByUserAll"  parameterType="map" resultMap="BaseResultMap">
-    select name,tel from tdata WHERE uid= #{uid}
+  <select id="queryTdataByUserAll"  parameterType="map" resultMap="SimpleResultMap">
+    select name,tel,date from tdata WHERE uid= #{uid}
   </select>
   <insert id="insertSome" parameterType="java.util.List">
-    insert into tdata (tdid, name, tel,uid, status, version)
+    insert into tdata (tdid, name, tel,uid, status, version,date)
     values
     <foreach collection="list" item="item" index="index" separator=",">
       (#{item.tdid,jdbcType=INTEGER}, #{item.name,jdbcType=VARCHAR},#{item.tel,jdbcType=VARCHAR}
-      ,#{item.uid,jdbcType=INTEGER}, #{item.status,jdbcType=INTEGER},#{item.version,jdbcType=VARCHAR})
+      ,#{item.uid,jdbcType=INTEGER}, #{item.status,jdbcType=INTEGER},#{item.version,jdbcType=VARCHAR}
+      ,#{item.date,jdbcType=VARCHAR})
     </foreach>
   </insert>
 </mapper>

@@ -1,9 +1,11 @@
 package com.wenlan.Service;
 
 import com.wenlan.Dao.TdataMapper;
+import com.wenlan.Model.DataSimple;
 import com.wenlan.Model.Tdata;
 import com.wenlan.Model.TdataExample;
 import com.wenlan.Model.User;
+import com.wenlan.Utils.DateTimeUtil;
 import com.wenlan.Utils.ExcelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,7 +77,7 @@ public class TdataService {
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> data = new HashMap();
         data.put("uid", uid);
-        List<Tdata> list = tdataMapper.queryTdataByUserAll(data);
+        List<DataSimple> list = tdataMapper.queryTdataByUserAll(data);
         map.put("code", 1);
         map.put("data", list);
         return map;
@@ -166,6 +168,7 @@ public class TdataService {
                 tdata.setUid(0);
                 tdata.setStatus(0);
                 tdata.setVersion("1");
+                tdata.setDate(DateTimeUtil.getCurrentDate("yyyy-MM-dd HH:mm"));
                 tdatas.add(tdata);
             }
             tdataMapper.insertSome(tdatas);

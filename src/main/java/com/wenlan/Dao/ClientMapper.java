@@ -6,6 +6,7 @@ import com.wenlan.Model.ClientExample;
 import java.util.List;
 import java.util.Map;
 
+import com.wenlan.Model.DataSimple;
 import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Repository;
@@ -39,8 +40,7 @@ public interface ClientMapper {
 
     List<Client> queryClientsByUser(Map<String, Object> data);
 
-    List<Client> queryClientsByUserAll(Map<String, Object> data);
+    List<DataSimple> queryClientsByUserAll(Map<String, Object> data);
 
     int insertSome(List<Client> clients);
-
 }
