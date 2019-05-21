@@ -59,6 +59,13 @@
 <div class="layui-container">
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;padding: 10px 20px">
         <legend>查看用户</legend>
+        <form class="layui-form" action="">
+            <div class="layui-inline">
+                <input class="layui-input" name="serch" id="serch" autocomplete="off" lay-verify="required"
+                       placeholder="输入账号搜索">
+            </div>
+            <button class="layui-btn" lay-submit lay-filter="*">搜索</button>
+        </form>
         <table class="layui-hide" id="test" lay-filter="test"></table>
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
@@ -85,7 +92,6 @@
 <script>
     layui.use(['table', 'form'], function () {
         var table = layui.table, form = layui.form;
-
         var tableIns = table.render({
                 elem: '#test'
                 , url: 'user/lookUser'
@@ -130,6 +136,18 @@
             tableData[trElem.data('index')][elem.attr('name')] = data.value;
         });
 
+        form.on('submit(*)', function (data) {
+            //执行重载
+            table.reload('testTable', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                , where: {
+                    str: $("#serch").val()
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
 
         //头工具栏事件
         table.on('toolbar(test)', function (obj) {

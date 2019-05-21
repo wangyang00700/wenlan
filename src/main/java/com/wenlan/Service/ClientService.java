@@ -85,17 +85,16 @@ public class ClientService {
     public Map<String, Object> setClientByuid(int uid) {
         User user = userService.getUser(uid);
         //当用户提取量不够时
-        if (user.getCount() == 0) {
+        if (user.getCount() <= 0) {
             Map<String, Object> map = new HashMap<>();
             map.put("code", 0);
             map.put("msg", "用户提取量不足,请联系管理员充值");
             return map;
         }
-        List<Client> clients = null;
+
         ClientExample clientExample = new ClientExample();
         clientExample.or().andUidEqualTo(0);
-        clients = clientMapper.selectByExample(clientExample);
-        if (clients.size() < user.getCount()) {
+        if (clientMapper.countByExample(clientExample) < user.getCount()) {
             Map<String, Object> map = new HashMap<>();
             map.put("code", 0);
             map.put("msg", "库存不够,请联系管理员补充");
@@ -104,26 +103,39 @@ public class ClientService {
 
         int datacount = user.getCount();
         Calendar calendar = null;
+        //每分钟出资源数
         int timeLimit = 30;
         if (datacount <= 1500)
             calendar = DateTimeUtil.getBeforeHourTime(1);
         else if (datacount > 1500)
             calendar = DateTimeUtil.getBeforeHourTime(2);
         String time = DateTimeUtil.getNextMinuteTime(calendar, 0);
-
-        for (int i = 0, j = 1; i < clients.size() && datacount > 0; i++) {
-            clients.get(i).setUid(uid);
-            if (j % timeLimit == 0)
-                time = DateTimeUtil.getNextMinuteTime(calendar, 1);
-            clients.get(i).setDate(time);
-            if (clientMapper.updateByPrimaryKey(clients.get(i)) == 1) {
-                datacount--;
-                j++;
+        //获取所有资源
+        Map<String, Object> m = new HashMap();
+        m.put("uid", uid);
+        m.put("value", 0);
+        int j = 1;
+        //循环判断
+        while (datacount > 0) {
+            m.put("limit", datacount);
+            List<DataUModel> datas = clientMapper.queryClientsByUserLitle(m);
+            if (datas.size() == 0) break;
+            for (int i = 0; i < datas.size(); i++) {
+                datas.get(i).setUid(uid);
+                if (j++ % timeLimit == 0)
+                    time = DateTimeUtil.getNextMinuteTime(calendar, 1);
+                datas.get(i).setDate(time);
             }
+            clientMapper.updateSome(datas);
+            ClientExample clientExample1 = new ClientExample();
+            clientExample1.or().andUidEqualTo(uid);
+            int count = clientMapper.countByExample(clientExample1);
+            if (count == datacount)
+                datacount = 0;
+            else datacount = datacount - count;
         }
         user.setCount(datacount);
         userService.updateUser(user);
-
         if (datacount > 0) {
             Map<String, Object> map = new HashMap<>();
             map.put("code", 2);
@@ -135,7 +147,6 @@ public class ClientService {
             map.put("msg", "获取成功");
             return map;
         }
-
     }
 
     public Map<String, Object> delete(int type) {

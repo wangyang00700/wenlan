@@ -63,13 +63,17 @@ public class UserService {
         return map;
     }
 
-    public Map<String, Object> lookUser(int page, int limit) {
+    public Map<String, Object> lookUser(int page, int limit, String str) {
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> data = new HashMap();
         data.put("page", (page - 1) * limit);
         data.put("limit", limit);
         data.put("type", 1);
-        List<User> users = userMapper.queryUserBySys(data);
+        List<User> users;
+        if (str != null && !str.equals("")) {
+            data.put("str", str);
+            users = userMapper.queryUserBySysLike(data);
+        } else users = userMapper.queryUserBySys(data);
         map.put("code", 0);
         map.put("data", users);
         map.put("limit", limit);
@@ -114,9 +118,8 @@ public class UserService {
         return userMapper.selectByPrimaryKey(uid);
     }
 
-    public int updateUser(User user)
-    {
-       return userMapper.updateByPrimaryKeySelective(user);
+    public int updateUser(User user) {
+        return userMapper.updateByPrimaryKeySelective(user);
     }
 }
 

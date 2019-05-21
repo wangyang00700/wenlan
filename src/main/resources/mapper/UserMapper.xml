@@ -228,4 +228,7 @@
   <select id="queryUserBySys"  parameterType="map" resultMap="BaseResultMap">
     select * from user WHERE type = #{type} limit #{page} , #{limit}
   </select>
+  <select id="queryUserBySysLike"  parameterType="map" resultMap="BaseResultMap">
+    select * from user WHERE type = #{type} and username like CONCAT('%',#{str},'%') limit #{page} , #{limit}
+  </select>
 </mapper>

@@ -15,6 +15,11 @@
     <result column="tel" property="tel" jdbcType="VARCHAR" />
     <result column="date" property="date" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="SimpleResultMap2" type="com.wenlan.Model.DataUModel" >
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+    <result column="date" property="date" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -91,7 +96,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from client
     where cid = #{cid,jdbcType=INTEGER}
@@ -245,15 +250,23 @@
       date = #{date,jdbcType=VARCHAR}
     where cid = #{cid,jdbcType=INTEGER}
   </update>
+
   <select id="queryClientsBySys"  parameterType="map" resultMap="BaseResultMap">
     select * from client limit #{page} , #{limit}
   </select>
+
   <select id="queryClientsByUser"  parameterType="map" resultMap="BaseResultMap">
     select * from client WHERE uid= #{uid} limit #{page} , #{limit}
   </select>
+
+    <select id="queryClientsByUserLitle"  parameterType="map" resultMap="SimpleResultMap2">
+        select  cid, uid, version, date from client where uid=#{value} limit #{limit}
+    </select>
+
   <select id="queryClientsByUserAll"  parameterType="map" resultMap="SimpleResultMap">
     select name,tel,date from client WHERE uid= #{uid}
   </select>
+
   <insert id="insertSome" parameterType="java.util.List">
     insert into client (cid, name, tel,uid, status, version)
     values
@@ -262,4 +275,13 @@
       ,#{item.uid,jdbcType=INTEGER}, #{item.status,jdbcType=INTEGER},#{item.version,jdbcType=VARCHAR})
     </foreach>
   </insert>
+
+  <update id="updateSome"   parameterType="java.util.List">
+    <foreach collection="list" item="item" index="index">
+      update client
+      SET uid=#{item.uid},date=#{item.date},version=version+1
+      WHERE
+      cid=#{item.cid} and version=#{item.version};
+    </foreach>
+  </update>
 </mapper>

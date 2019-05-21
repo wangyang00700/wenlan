@@ -15,6 +15,11 @@
     <result column="tel" property="tel" jdbcType="VARCHAR" />
     <result column="date" property="date" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="SimpleResultMap2" type="com.wenlan.Model.DataTModel" >
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+    <result column="date" property="date" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -245,15 +250,23 @@
       date = #{date,jdbcType=VARCHAR}
     where tdid = #{tdid,jdbcType=INTEGER}
   </update>
+
   <select id="queryTdataBySys"  parameterType="map" resultMap="BaseResultMap">
     select * from tdata limit #{page} , #{limit}
   </select>
+
   <select id="queryTdataByUser"  parameterType="map" resultMap="BaseResultMap">
     select * from tdata WHERE uid= #{uid} limit #{page} , #{limit}
   </select>
+
+  <select id="queryTdataByUserLitle"  parameterType="map" resultMap="SimpleResultMap2">
+    select  tdid, uid, version, date from tdata where uid=#{value} limit #{limit}
+  </select>
+
   <select id="queryTdataByUserAll"  parameterType="map" resultMap="SimpleResultMap">
     select name,tel,date from tdata WHERE uid= #{uid}
   </select>
+
   <insert id="insertSome" parameterType="java.util.List">
     insert into tdata (tdid, name, tel,uid, status, version,date)
     values
@@ -263,4 +276,13 @@
       ,#{item.date,jdbcType=VARCHAR})
     </foreach>
   </insert>
+
+  <update id="updateSome"   parameterType="java.util.List">
+    <foreach collection="list" item="item" index="index">
+      update tdata
+      SET uid=#{item.uid},date=#{item.date},version=version+1
+      WHERE
+      tdid=#{item.tdid} and version=#{item.version};
+    </foreach>
+  </update>
 </mapper>

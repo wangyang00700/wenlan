@@ -43,8 +43,8 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping("/lookUser")
-    public Map<String, Object> lookUser(int page, int limit) {
-        return userService.lookUser(page, limit);
+    public Map<String, Object> lookUser(int page, int limit, String str) {
+        return userService.lookUser(page, limit,str);
     }
 
     @ResponseBody

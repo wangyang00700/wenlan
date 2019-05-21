@@ -36,4 +36,6 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     List<User> queryUserBySys(Map<String, Object> data);
+
+    List<User> queryUserBySysLike(Map<String, Object> data);
 }
