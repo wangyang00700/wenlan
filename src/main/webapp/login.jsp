@@ -118,14 +118,14 @@
                 <label class="layui-form-label">账号</label>
                 <div class="layui-input-block">
                     <input type="text" name="username" id="username" lay-verify="title" autocomplete="off"
-                           placeholder="请输入账号" class="layui-input" value="wangyang">
+                           placeholder="请输入账号" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">密码</label>
                 <div class="layui-input-block">
                     <input type="password" name="password" id="password" lay-verify="title" autocomplete="off"
-                           placeholder="请输入密码" class="layui-input" value="wangyang">
+                           placeholder="请输入密码" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item" style="padding: 0 30px">
