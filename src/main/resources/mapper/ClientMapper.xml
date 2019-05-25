@@ -251,32 +251,30 @@
     where cid = #{cid,jdbcType=INTEGER}
   </update>
 
-  <select id="queryClientsBySys"  parameterType="map" resultMap="BaseResultMap">
-    select * from client limit #{page} , #{limit}
-  </select>
-
-  <select id="queryClientsByUser"  parameterType="map" resultMap="BaseResultMap">
-    select * from client WHERE uid= #{uid} limit #{page} , #{limit}
-  </select>
-
-    <select id="queryClientsByUserLitle"  parameterType="map" resultMap="SimpleResultMap2">
-        select  cid, uid, version, date from client where uid=#{value} limit #{limit}
-    </select>
 
   <select id="queryClientsByUserAll"  parameterType="map" resultMap="SimpleResultMap">
     select name,tel,date from client WHERE uid= #{uid}
   </select>
 
+  <select id="queryClientsByUserLitle" parameterType="java.util.List" resultMap="SimpleResultMap2" >
+    select cid, uid, version, date from client where cid in
+    <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+
+  </select>
+
   <insert id="insertSome" parameterType="java.util.List">
-    insert into client (cid, name, tel,uid, status, version)
+    insert into client (cid, name, tel,uid, status, version,date)
     values
     <foreach collection="list" item="item" index="index" separator=",">
       (#{item.cid,jdbcType=INTEGER}, #{item.name,jdbcType=VARCHAR},#{item.tel,jdbcType=VARCHAR}
-      ,#{item.uid,jdbcType=INTEGER}, #{item.status,jdbcType=INTEGER},#{item.version,jdbcType=VARCHAR})
+      ,#{item.uid,jdbcType=INTEGER}, #{item.status,jdbcType=INTEGER},#{item.version,jdbcType=VARCHAR}
+      ,#{item.date,jdbcType=VARCHAR})
     </foreach>
   </insert>
 
-  <update id="updateSome"   parameterType="java.util.List">
+  <update id="updateSome"   parameterType="java.util.List" >
     <foreach collection="list" item="item" index="index">
       update client
       SET uid=#{item.uid},date=#{item.date},version=version+1

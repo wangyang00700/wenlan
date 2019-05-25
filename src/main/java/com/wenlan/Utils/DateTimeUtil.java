@@ -32,6 +32,10 @@ public class DateTimeUtil {
         return DateTimeUtil.getCurrentDate("yyyyMMdd");
     }
 
+    public static String getCurrentDate3() {
+        return DateTimeUtil.getCurrentDate("yyyy/MM/dd");
+    }
+
     public static String getCurrentDate2() {
         return DateTimeUtil.getCurrentDate("yyyyMM");
     }

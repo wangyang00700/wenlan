@@ -44,6 +44,12 @@ public class ClientController {
     }
 
     @ResponseBody
+    @RequestMapping("/getAllByUser")
+    public Map<String, Object> queryAllByUser(int page, int limit) {
+        return clientService.queryAllByUser(page, limit);
+    }
+
+    @ResponseBody
     @RequestMapping("/getUserdata")
     public Map<String, Object> getUserdata(int page, int limit, int uid) {
         return clientService.queryClientsByUser(page, limit, uid);
@@ -63,7 +69,7 @@ public class ClientController {
 
     @ResponseBody
     @RequestMapping("/setClientByuid")
-    public Map<String, Object> setClientByuid(int uid) {
-        return clientService.setClientByuid(uid);
+    public Map<String, Object> setClientByuid(int uid,String cids) {
+        return clientService.setClientByuid(uid,cids);
     }
 }

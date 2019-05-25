@@ -251,14 +251,6 @@
     where tdid = #{tdid,jdbcType=INTEGER}
   </update>
 
-  <select id="queryTdataBySys"  parameterType="map" resultMap="BaseResultMap">
-    select * from tdata limit #{page} , #{limit}
-  </select>
-
-  <select id="queryTdataByUser"  parameterType="map" resultMap="BaseResultMap">
-    select * from tdata WHERE uid= #{uid} limit #{page} , #{limit}
-  </select>
-
   <select id="queryTdataByUserLitle"  parameterType="map" resultMap="SimpleResultMap2">
     select  tdid, uid, version, date from tdata where uid=#{value} limit #{limit}
   </select>

@@ -1,5 +1,6 @@
 package com.wenlan.Service;
 
+import com.github.pagehelper.PageHelper;
 import com.wenlan.Dao.TdataMapper;
 import com.wenlan.Model.*;
 import com.wenlan.Utils.DateTimeUtil;
@@ -37,10 +38,8 @@ public class TdataService {
 
     public Map<String, Object> queryTdataBySys(int page, int limit) {
         Map<String, Object> map = new HashMap<>();
-        Map<String, Object> data = new HashMap();
-        data.put("page", (page - 1) * limit);
-        data.put("limit", limit);
-        List<Tdata> list = tdataMapper.queryTdataBySys(data);
+        PageHelper.startPage(page, limit);
+        List<Tdata> list = tdataMapper.selectByExample(new TdataExample());
         map.put("code", 0);
         map.put("data", list);
         map.put("limit", limit);
@@ -53,20 +52,14 @@ public class TdataService {
 
     public Map<String, Object> queryTdataByUser(int page, int limit, int uid) {
         Map<String, Object> map = new HashMap<>();
-        Map<String, Object> data = new HashMap();
-        data.put("page", (page - 1) * limit);
-        data.put("limit", limit);
-        data.put("uid", uid);
-        List<Tdata> list = tdataMapper.queryTdataByUser(data);
+        TdataExample tdataExample = new TdataExample();
+        tdataExample.or().andUidEqualTo(uid);
+        PageHelper.startPage(page, limit);
+        List<Tdata> list = tdataMapper.selectByExample(tdataExample);
         map.put("code", 0);
         map.put("data", list);
         map.put("limit", limit);
-        TdataExample tdataExample = new TdataExample();
-        tdataExample.or().andUidEqualTo(uid);
         map.put("count", tdataMapper.countByExample(tdataExample));
-//        TdataExample tdataExample = new TdataExample();
-//        tdataExample.or().andUidNotEqualTo(0);
-//        map.put("okcount", tdataMapper.countByExample(tdataExample));
         return map;
     }
 

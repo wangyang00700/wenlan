@@ -70,11 +70,20 @@
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">资源管理</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="check_user_data.jsp" target="content_iframe">查看资源</a></dd>
-                    </dl>
+                <li class="layui-nav-item">
+                    <a href="checkAllClientByUser.jsp" target="content_iframe"><i
+                            class="layui-icon layui-icon-face-smile layui-icon-username"
+                            style="margin-right: 5px;"></i> 客户列表</a>
+                </li>
+                <li class="layui-nav-item ">
+                    <a href="check_user_data.jsp" target="content_iframe"><i
+                            class="layui-icon layui-icon-face-smile layui-icon-dollar"
+                            style="margin-right: 5px;"></i> 已购买客户列表</a>
+                </li>
+                <li class="layui-nav-item ">
+                    <a href="javascript:"><i
+                            class="layui-icon layui-icon-face-smile layui-icon-user"
+                            style="margin-right: 5px;"></i> 子账户开通</a>
                 </li>
             </ul>
         </div>
@@ -82,7 +91,7 @@
 
     <div class="layui-body">
         <!-- 内容主体区域 -->
-        <iframe id="main_iframe" src="check_user_data.jsp" name="content_iframe" frameborder="no" border="0"></iframe>
+        <iframe id="main_iframe" src="checkAllClientByUser.jsp" name="content_iframe" frameborder="no" border="0"></iframe>
     </div>
 
     <div class="layui-footer">

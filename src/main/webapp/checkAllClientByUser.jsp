@@ -37,12 +37,8 @@
 <body>
 <div class="layui-container">
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;padding: 10px 20px">
-        <legend>已购买客户列表</legend>
-        <button class="layui-btn" onclick="exportExcel()">导出成excel</button>
-        <label class="layui-btn layui-btn-primary"
-               style="border:none;border-left:5px solid #009688;border-radius:0 2px 2px 0;background-color:#f2f2f2;color: #ff2d51">
-            获取资源后及时导出,以防删除!!!
-        </label>
+        <legend>客户列表</legend>
+        <button class="layui-btn" onclick="getData()">购买选中客户资料</button>
         <table class="layui-hide" id="test" lay-filter="test"></table>
         <script type="text/html" id="index">
             <span class="tdspan"></span>
@@ -56,15 +52,24 @@
     var datatype = "<c:out value='${sessionScope.user.dtype}' />";
     var uid = "<c:out value='${sessionScope.user.uid}' />";
     function getData() {
-        index = layer.load(2);
         var urlpath;
         if (datatype == 0)
             urlpath = "client/setClientByuid";
         else urlpath = "tdata/setTdataByuid";
-        $.post(urlpath + '?uid=' + uid, function (json) {
+        var checkStatus = table.checkStatus('testTable')
+            , datas = checkStatus.data;
+        if (datas.length == 0) {
+            layer.msg("未选取客户", {icon: 2});
+            return;
+        }
+        var cids = "";
+        for (var i = 0; i < datas.length; i++) {
+            cids += "," + datas[i].cid;
+        }
+        index = layer.load(2);
+        $.post(urlpath, {"uid": uid, "cids": cids}, function (json) {
             layer.close(index);
             if (json.code == 1) {
-
                 layer.msg(json.msg, {icon: 1});
                 window.parent.getUser();
                 tableIns.reload();
@@ -77,21 +82,6 @@
             }
         });
     }
-    function exportExcel() {
-        index = layer.load(2);
-        var urlpath;
-        if (datatype == 0)
-            urlpath = "client/getUserdataAll";
-        else urlpath = "tdata/getUserdataAll";
-        $.post(urlpath, {uid: uid}, function (json) {
-            if (json.code == 1) {
-                layer.close(index);
-//                JSONToExcelConvertor(json.data,'资源表');
-                table.exportFile(['姓名', '号码', '日期'], json.data, 'xls');
-            }
-
-        });
-    }
 </script>
 <script>
     var table;
@@ -100,7 +90,7 @@
         table = layui.table;
         var urlpath = "";
         if (datatype == 0)
-            urlpath = "client/getUserdata";
+            urlpath = "client/getAllByUser";
         else urlpath = "tdata/getUserdata";
         tableIns = table.render({
             elem: '#test'
@@ -110,11 +100,12 @@
             , title: '资源表'
             , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             , page: true  //开启分页
-            , limits: [100, 500, 1000]  //每页条数的选择项，默认：[10,20,30,40,50,60,70,80,90]。
+            , limits: [100, 200, 300, 400, 500, 1000]  //每页条数的选择项，默认：[10,20,30,40,50,60,70,80,90]。
             , limit: 100 //每页默认显示的数量
             , method: 'post'  //提交方式
             , cols: [[ //表头
-                {field: 'index', title: '序号', templet: "#index", align: "center"}
+                {type: 'checkbox'}
+                , {field: 'index', title: '序号', templet: "#index", align: "center"}
                 , {field: 'name', title: '姓名', align: "center"}
                 , {field: 'tel', title: '电话', align: "center"}
                 , {field: 'date', title: '日期', align: "center"}
@@ -127,8 +118,10 @@
                     $(item).text((curr - 1) * limit + index + 1);
                 });
             }
-        });
-    });
+        })
+        ;
+    })
+    ;
 </script>
 <%--<script>--%>
 <%--function JSONToExcelConvertor(JSONData, FileName) {--%>

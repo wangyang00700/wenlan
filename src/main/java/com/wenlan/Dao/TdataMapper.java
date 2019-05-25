@@ -34,10 +34,6 @@ public interface TdataMapper {
 
     int updateByPrimaryKey(Tdata record);
 
-    List<Tdata> queryTdataBySys(Map<String, Object> data);
-
-    List<Tdata> queryTdataByUser(Map<String, Object> data);
-
     //导出用
     List<DataSimple> queryTdataByUserAll(Map<String, Object> data);
 

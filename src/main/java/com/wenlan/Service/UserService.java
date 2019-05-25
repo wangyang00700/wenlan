@@ -1,5 +1,6 @@
 package com.wenlan.Service;
 
+import com.github.pagehelper.PageHelper;
 import com.wenlan.Dao.UserMapper;
 import com.wenlan.Model.ClientExample;
 import com.wenlan.Model.User;
@@ -65,20 +66,22 @@ public class UserService {
 
     public Map<String, Object> lookUser(int page, int limit, String str) {
         Map<String, Object> map = new HashMap<>();
+        UserExample userExample = new UserExample();
+        userExample.or().andTypeEqualTo(1);
         Map<String, Object> data = new HashMap();
-        data.put("page", (page - 1) * limit);
-        data.put("limit", limit);
         data.put("type", 1);
         List<User> users;
         if (str != null && !str.equals("")) {
             data.put("str", str);
+            PageHelper.startPage(page, limit);
             users = userMapper.queryUserBySysLike(data);
-        } else users = userMapper.queryUserBySys(data);
+        } else {
+            PageHelper.startPage(page, limit);
+            users = userMapper.selectByExample(userExample);
+        }
         map.put("code", 0);
         map.put("data", users);
         map.put("limit", limit);
-        UserExample userExample = new UserExample();
-        userExample.or().andTypeEqualTo(1);
         map.put("count", userMapper.countByExample(userExample));
         return map;
     }

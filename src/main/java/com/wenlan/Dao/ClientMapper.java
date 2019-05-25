@@ -37,15 +37,11 @@ public interface ClientMapper {
 
     int updateByPrimaryKey(Client record);
 
-    List<Client> queryClientsBySys(Map<String, Object> data);
-
-    List<Client> queryClientsByUser(Map<String, Object> data);
-
     //导出用
     List<DataSimple> queryClientsByUserAll(Map<String, Object> data);
 
     //获取用
-    List<DataUModel> queryClientsByUserLitle(Map<String, Object> data);
+    List<DataUModel> queryClientsByUserLitle(List<String> list);
 
     int insertSome(List<Client> clients);
 
