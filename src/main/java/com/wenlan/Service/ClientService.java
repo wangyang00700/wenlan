@@ -230,9 +230,9 @@ public class ClientService {
     /*******************************************************************************/
 
     //解析Excel
-    public Map<String, Object> ajaxUploadExcel(MultipartFile file) {
+    public Map<String, Object> ajaxUploadExcel(MultipartFile file, String startDate, String endDate) {
         Map<String, Object> map = new HashMap<>();
-
+        System.out.println(startDate + " " + endDate);
         if (file.isEmpty()) {
             try {
                 throw new Exception("文件不存在！");

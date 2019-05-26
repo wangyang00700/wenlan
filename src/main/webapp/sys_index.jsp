@@ -36,32 +36,12 @@
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
         <div class="layui-logo">资源</div>
-        <%--<!-- 头部区域（可配合layui已有的水平导航） -->--%>
-        <%--<ul class="layui-nav layui-layout-left">--%>
-        <%--<li class="layui-nav-item"><a href="">控制台</a></li>--%>
-        <%--<li class="layui-nav-item"><a href="">商品管理</a></li>--%>
-        <%--<li class="layui-nav-item"><a href="">用户</a></li>--%>
-        <%--<li class="layui-nav-item">--%>
-        <%--<a href="javascript:;">其它系统</a>--%>
-        <%--<dl class="layui-nav-child">--%>
-        <%--<dd><a href="">邮件管理</a></dd>--%>
-        <%--<dd><a href="">消息管理</a></dd>--%>
-        <%--<dd><a href="">授权管理</a></dd>--%>
-        <%--</dl>--%>
-        <%--</li>--%>
-        <%--</ul>--%>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:;">
-                    <%--<img src="http://t.cn/RCzsdCq" class="layui-nav-img">--%>
                     <label id="userType">管理员</label>：${sessionScope.user.username}
                 </a>
-                <%--<dl class="layui-nav-child">--%>
-                <%--<dd><a href="">基本资料</a></dd>--%>
-                <%--<dd><a href="">安全设置</a></dd>--%>
-                <%--</dl>--%>
             </li>
-            <%--<li class="layui-nav-item"><a href="">退了</a></li>--%>
         </ul>
     </div>
 
@@ -74,7 +54,7 @@
                     <dl class="layui-nav-child">
                         <dd><a href="upload.jsp" target="content_iframe">上传资源</a></dd>
                         <dd><a href="check_now_data.jsp" target="content_iframe">实时资源</a></dd>
-                        <dd><a href="check_tonight_data.jsp" target="content_iframe">隔夜资源</a></dd>
+                        <%--<dd><a href="check_tonight_data.jsp" target="content_iframe">隔夜资源</a></dd>--%>
                     </dl>
                 </li>
                 <li class="layui-nav-item ">
@@ -84,8 +64,6 @@
                         <dd><a href="check_user.jsp" target="content_iframe">查看用户</a></dd>
                     </dl>
                 </li>
-                <%--<li class="layui-nav-item"><a href="">云市场</a></li>--%>
-                <%--<li class="layui-nav-item"><a href="">发布商品</a></li>--%>
             </ul>
         </div>
     </div>

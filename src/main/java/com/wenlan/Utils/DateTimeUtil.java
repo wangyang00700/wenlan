@@ -2,6 +2,7 @@ package com.wenlan.Utils;
 
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -77,5 +78,58 @@ public class DateTimeUtil {
             codeLen--;
         }
         return strCode;
+    }
+
+    public static long datediff(String startTime, String endTime) {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        try {
+            Date begin = dfs.parse(startTime);
+            Date end = dfs.parse(endTime);
+            long between = (end.getTime() - begin.getTime()) / 1000;//除以1000是为了转换成秒
+            return between;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static Long dateDiff(String startTime, String endTime,
+                                String format, String str) {
+        // 按照传入的格式生成一个simpledateformate对象
+        SimpleDateFormat sd = new SimpleDateFormat(format);
+        long nd = 1000 * 24 * 60 * 60;// 一天的毫秒数
+        long nh = 1000 * 60 * 60;// 一小时的毫秒数
+        long nm = 1000 * 60;// 一分钟的毫秒数
+        long ns = 1000;// 一秒钟的毫秒数
+        long diff;
+        long day = 0;
+        long hour = 0;
+        long min = 0;
+        long sec = 0;
+        // 获得两个时间的毫秒时间差异
+        try {
+            diff = sd.parse(endTime).getTime() - sd.parse(startTime).getTime();
+            day = diff / nd;// 计算差多少天
+            hour = diff % nd / nh + day * 24;// 计算差多少小时
+            min = diff % nd % nh / nm + day * 24 * 60;// 计算差多少分钟
+            sec = diff % nd % nh % nm / ns + day * 24 * 60 * 60;// 计算差多少秒
+            // 输出结果
+            System.out.println("时间相差：" + day + "天" + (hour - day * 24) + "小时"
+                    + (min - day * 24 * 60) + "分钟" + (sec - day * 24 * 60 * 60) + "秒。");
+            if (str.equalsIgnoreCase("h")) {
+                return hour;
+            } else {
+                return min;
+            }
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (str.equalsIgnoreCase("h")) {
+            return hour;
+        } else {
+            return min;
+        }
     }
 }

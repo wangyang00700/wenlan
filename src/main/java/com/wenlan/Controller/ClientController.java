@@ -33,8 +33,11 @@ public class ClientController {
 
     @ResponseBody
     @RequestMapping("/upload")
-    public Map<String, Object> getExcel(@RequestParam("excel") MultipartFile file, HttpServletRequest request) {
-        return clientService.ajaxUploadExcel(file);
+    public Map<String, Object> getExcel(@RequestParam("excel") MultipartFile file,
+                                        @RequestParam("startDate") String startDate,
+                                        @RequestParam("endDate") String endDate,
+                                        HttpServletRequest request) {
+        return clientService.ajaxUploadExcel(file,startDate,endDate);
     }
 
     @ResponseBody
@@ -69,7 +72,7 @@ public class ClientController {
 
     @ResponseBody
     @RequestMapping("/setClientByuid")
-    public Map<String, Object> setClientByuid(int uid,String cids) {
-        return clientService.setClientByuid(uid,cids);
+    public Map<String, Object> setClientByuid(int uid, String cids) {
+        return clientService.setClientByuid(uid, cids);
     }
 }

@@ -71,12 +71,12 @@
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
                 <li class="layui-nav-item">
-                    <a href="checkAllClientByUser.jsp" target="content_iframe"><i
+                    <a href="checkAllClientByUser.jsp" target="main_iframe"><i
                             class="layui-icon layui-icon-face-smile layui-icon-username"
                             style="margin-right: 5px;"></i> 客户列表</a>
                 </li>
                 <li class="layui-nav-item ">
-                    <a href="check_user_data.jsp" target="content_iframe"><i
+                    <a href="check_user_data.jsp" target="main_iframe"><i
                             class="layui-icon layui-icon-face-smile layui-icon-dollar"
                             style="margin-right: 5px;"></i> 已购买客户列表</a>
                 </li>
