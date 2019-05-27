@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -40,12 +41,14 @@ public class ClientService {
     public Map<String, Object> queryClientsBySys(int page, int limit) {
         Map<String, Object> map = new HashMap<>();
         PageHelper.startPage(page, limit);
-        List<Client> list = clientMapper.selectByExample(new ClientExample());
+        ClientExample clientExample = new ClientExample();
+        clientExample.setOrderByClause("date");
+        List<Client> list = clientMapper.selectByExample(clientExample);
         map.put("code", 0);
         map.put("data", list);
         map.put("limit", limit);
         map.put("count", clientMapper.countByExample(new ClientExample()));
-        ClientExample clientExample = new ClientExample();
+        clientExample = new ClientExample();
         clientExample.or().andUidNotEqualTo(0);
         map.put("okcount", clientMapper.countByExample(clientExample));
         return map;
@@ -56,6 +59,7 @@ public class ClientService {
         Map<String, Object> map = new HashMap<>();
         ClientExample clientExample = new ClientExample();
         clientExample.or().andUidEqualTo(0);
+        clientExample.setOrderByClause("date");
         PageHelper.startPage(page, limit);
         List<Client> list = clientMapper.selectByExample(clientExample);
         String time = DateTimeUtil.getCurrentDate3();
@@ -65,7 +69,6 @@ public class ClientService {
             if (item.getDate().equals(time)) {
                 item.setDate("今天");
             }
-
         }
         map.put("code", 0);
         map.put("data", list);
@@ -78,6 +81,7 @@ public class ClientService {
         Map<String, Object> map = new HashMap<>();
         ClientExample clientExample = new ClientExample();
         clientExample.or().andUidEqualTo(uid);
+        clientExample.setOrderByClause("date");
         PageHelper.startPage(page, limit);
         List<Client> list = clientMapper.selectByExample(clientExample);
         map.put("code", 0);
@@ -144,72 +148,6 @@ public class ClientService {
             return map;
         }
     }
-//    public Map<String, Object> setClientByuid(int uid) {
-//        User user = userService.getUser(uid);
-//        //当用户提取量不够时
-//        if (user.getCount() <= 0) {
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("code", 0);
-//            map.put("msg", "用户提取量不足,请联系管理员充值");
-//            return map;
-//        }
-//
-//        ClientExample clientExample = new ClientExample();
-//        clientExample.or().andUidEqualTo(0);
-//        if (clientMapper.countByExample(clientExample) < user.getCount()) {
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("code", 0);
-//            map.put("msg", "库存不够,请联系管理员补充");
-//            return map;
-//        }
-//
-//        int datacount = user.getCount();
-//        Calendar calendar = null;
-//        //每分钟出资源数
-//        int timeLimit = 30;
-//        if (datacount <= 1500)
-//            calendar = DateTimeUtil.getBeforeHourTime(1);
-//        else if (datacount > 1500)
-//            calendar = DateTimeUtil.getBeforeHourTime(2);
-//        String time = DateTimeUtil.getNextMinuteTime(calendar, 0);
-//        //获取所有资源
-//        Map<String, Object> m = new HashMap();
-//        m.put("uid", uid);
-//        m.put("value", 0);
-////        int j = 1;
-//        //循环判断
-//        while (datacount > 0) {
-//            m.put("limit", datacount);
-//            List<DataUModel> datas = clientMapper.queryClientsByUserLitle(m);
-//            if (datas.size() == 0) break;
-//            for (int i = 0; i < datas.size(); i++) {
-//                datas.get(i).setUid(uid);
-////                if (j++ % timeLimit == 0)
-////                    time = DateTimeUtil.getNextMinuteTime(calendar, 1);
-////                datas.get(i).setDate(time);
-//            }
-//            clientMapper.updateSome(datas);
-//            ClientExample clientExample1 = new ClientExample();
-//            clientExample1.or().andUidEqualTo(uid);
-//            int count = clientMapper.countByExample(clientExample1);
-//            if (count == datacount)
-//                datacount = 0;
-//            else datacount = datacount - count;
-//        }
-//        user.setCount(datacount);
-//        userService.updateUser(user);
-//        if (datacount > 0) {
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("code", 2);
-//            map.put("msg", "获取成功,库存临时不够,只提取一部分,剩余请看提取量");
-//            return map;
-//        } else {
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("code", 1);
-//            map.put("msg", "获取成功");
-//            return map;
-//        }
-//    }
 
     public Map<String, Object> delete(int type) {
         Map<String, Object> map = new HashMap<>();
@@ -232,7 +170,6 @@ public class ClientService {
     //解析Excel
     public Map<String, Object> ajaxUploadExcel(MultipartFile file, String startDate, String endDate) {
         Map<String, Object> map = new HashMap<>();
-        System.out.println(startDate + " " + endDate);
         if (file.isEmpty()) {
             try {
                 throw new Exception("文件不存在！");
@@ -252,6 +189,19 @@ public class ClientService {
         List<Client> clients = new ArrayList<>();
         try {
             listob = new ExcelUtils().getBankListByExcel(in, file.getOriginalFilename());
+            //获取两个时间相差秒数
+            long minute = DateTimeUtil.datediff(startDate, endDate);
+            if (minute <= 0) {
+                map.put("code", 0);
+                map.put("text", "时间一样或开始时间大于结束时间");
+                return map;
+            }
+
+            Calendar calendar = DateTimeUtil.getCalendar(startDate);
+            String datetime = DateTimeUtil.getNextMinuteTime(calendar, 0);
+            Random r = new Random();
+            int bount = (int) (listob.size() / minute);
+            if (bount == 0) bount = 1;
             for (int i = 0; i < listob.size(); i++) {
                 List<Object> lo = listob.get(i);
                 Client client = new Client();
@@ -260,7 +210,14 @@ public class ClientService {
                 client.setUid(0);
                 client.setStatus(0);
                 client.setVersion("1");
-                client.setDate(DateTimeUtil.getCurrentDate("yyyy/MM/dd"));
+                if ((i + 1) % bount == 0) {
+                    datetime = DateTimeUtil.getNextMinuteTime(calendar, 1);
+                }
+                int i1 = r.nextInt(58) + 1;
+                String time = "";
+                if (i1 > 9) time = datetime + ":" + i1;
+                else time = datetime + ":0" + i1;
+                client.setDate(time);
                 clients.add(client);
             }
             clientMapper.insertSome(clients);
@@ -269,7 +226,7 @@ public class ClientService {
         } catch (Exception e) {
             e.printStackTrace();
             map.put("code", 0);
-            map.put("text", e.getMessage());
+            map.put("text", "格式有误，请另存为一份新文档上传");
         }
         return map;
     }

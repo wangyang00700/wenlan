@@ -46,7 +46,7 @@
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-        <div class="layui-logo">资源</div>
+        <div class="layui-logo">客户管理</div>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:;">
@@ -71,12 +71,12 @@
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
                 <li class="layui-nav-item">
-                    <a href="checkAllClientByUser.jsp" target="main_iframe"><i
+                    <a href="checkAllClientByUser.jsp" target="content_iframe"><i
                             class="layui-icon layui-icon-face-smile layui-icon-username"
                             style="margin-right: 5px;"></i> 客户列表</a>
                 </li>
                 <li class="layui-nav-item ">
-                    <a href="check_user_data.jsp" target="main_iframe"><i
+                    <a href="check_user_data.jsp" target="content_iframe"><i
                             class="layui-icon layui-icon-face-smile layui-icon-dollar"
                             style="margin-right: 5px;"></i> 已购买客户列表</a>
                 </li>
@@ -119,7 +119,7 @@
         $.post('user/getUser?uid=' + uid, function (json) {
             $("#userCount").text(json.user.count);
             if (json.user.dtype == 0)
-                $("#datatype").text("实时资源");
+                $("#datatype").text("实时进件");
             else  $("#datatype").text("隔夜资源");
         });
     }

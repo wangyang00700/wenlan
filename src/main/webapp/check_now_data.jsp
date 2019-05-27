@@ -71,6 +71,7 @@
                 {field: 'index', title: '序号', templet: "#index"}
                 , {field: 'name', title: '姓名'}
                 , {field: 'tel', title: '电话'}
+                , {field: 'date', title: '日期'}
 //                , {field: 'status', title: '状态(0禁用1启用)', sort: true, edit: 'text'}
 //                , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150, align: 'center'}
             ]]

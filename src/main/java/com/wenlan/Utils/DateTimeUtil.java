@@ -67,6 +67,12 @@ public class DateTimeUtil {
         return df.format(calendar.getTime());
     }
 
+    public static String getNextSecTime(Calendar calendar, int sec) {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        calendar.add(Calendar.SECOND, sec);
+        return dfs.format(calendar.getTime());
+    }
+
     public static String getNewRandomCode(int codeLen) {
         // 首先定义随机数据源
         // 根据需要得到的数据码的长度返回随机字符串
@@ -80,12 +86,20 @@ public class DateTimeUtil {
         return strCode;
     }
 
+    public static Calendar getCalendar(String dateStr) throws ParseException {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        Date date = dfs.parse(dateStr);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
+    }
+
     public static long datediff(String startTime, String endTime) {
-        SimpleDateFormat dfs = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         try {
             Date begin = dfs.parse(startTime);
             Date end = dfs.parse(endTime);
-            long between = (end.getTime() - begin.getTime()) / 1000;//除以1000是为了转换成秒
+            long between = (end.getTime() - begin.getTime()) / 1000 / 60 ;//除以1000是为了转换成秒
             return between;
         } catch (Exception e) {
             e.printStackTrace();

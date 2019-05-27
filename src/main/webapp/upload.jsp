@@ -121,8 +121,8 @@
                 //上传完毕回调
                 layer.close(index);
                 if (res.code == 1)
-                    layer.msg('上传成功', {icon: 1});
-                else layer.alert("格式有误，请另存为一份新文档上传");
+                    layer.msg(res.text, {icon: 1});
+                else layer.alert(res.text);
             }
             , error: function () {
                 //请求异常回调
@@ -143,8 +143,8 @@
                 //上传完毕回调
                 layer.close(index);
                 if (res.code == 1)
-                    layer.msg('上传成功', {icon: 1});
-                else layer.alert("格式有误，请另存为一份新文档上传");
+                    layer.msg(res.text, {icon: 1});
+                else layer.alert(res.text);
             }
             , error: function () {
                 //请求异常回调
@@ -156,7 +156,7 @@
         var laydate = layui.laydate;
         var myDate = new Date();
         var nowdate = myDate.getFullYear() + "/" + (myDate.getMonth() + 1) + "/" + myDate.getDate();
-        var nowtime = myDate.getHours() + ":" + myDate.getMinutes() + ":" + myDate.getSeconds();
+        var nowtime = myDate.getHours() + ":" + myDate.getMinutes() ;
         //执行一个laydate实例
         laydate.render({
             elem: '#startDate' //指定元素
@@ -170,6 +170,7 @@
             elem: '#startTime' //指定元素
             , type: "time"
             , value: nowtime
+            ,format: 'HH:mm'
         });
         laydate.render({
             elem: '#endDate' //指定元素
@@ -182,6 +183,7 @@
         laydate.render({
             elem: '#endTime' //指定元素
             , type: "time"
+            ,format: 'HH:mm'
             , value: nowtime
         });
     });

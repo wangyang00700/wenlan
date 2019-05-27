@@ -253,7 +253,7 @@
 
 
   <select id="queryClientsByUserAll"  parameterType="map" resultMap="SimpleResultMap">
-    select name,tel,date from client WHERE uid= #{uid}
+    select name,tel,date from client WHERE uid= #{uid} order by date
   </select>
 
   <select id="queryClientsByUserLitle" parameterType="java.util.List" resultMap="SimpleResultMap2" >
